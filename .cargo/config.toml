@@ -1,0 +1,16 @@
+# The system nvcc is 11.5 (Ubuntu), which predates `cuda_fp8.h` (added in 11.8)
+# and so cannot compile candle's kernels. The CUDA 13.3 toolkit inside the
+# project venv is what torch itself was built against, so point the build there.
+#
+# `NVCC` specifically: cudaforge (candle-kernels' build helper) resolves nvcc as
+# NVCC -> PATH -> CUDA_HOME, and PATH would otherwise hand it the 11.5 binary.
+# CUDA_HOME is set too so the include and lib dirs resolve alongside it.
+#
+# sm_75 is the GTX 1650 (Turing, TU117). It has NO tensor cores — the GTX 16xx
+# series is Turing with them fused off — so our own kernels target dp4a and
+# packed fp16 rather than wmma/mma.sync.
+
+[env]
+NVCC = { value = ".venv/lib/python3.11/site-packages/nvidia/cu13/bin/nvcc", relative = true }
+CUDA_HOME = { value = ".venv/lib/python3.11/site-packages/nvidia/cu13", relative = true }
+CUDA_COMPUTE_CAP = "75"

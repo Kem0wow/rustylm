@@ -1,0 +1,38 @@
+# --- Rust ---
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Models (LLM Weights) ---
+# Model dosyaları çok büyük olduğu için asla Git'e girmemeli
+/models/
+*.safetensors
+*.bin
+*.gguf
+*.onnx
+
+# --- Benchmarks & Logs ---
+# Sonuçları takip etmek istersen results.yaml'ı silebilirsin 
+# ama genelde ham veri Git'e yüklenmez.
+# bench/compare/results.yaml
+*.log
+
+# --- OS / Editors ---
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Project Specific ---
+# Eğer ileride hub ile indirdiğin geçici dosyalar olursa:
+crates/hub/downloads/
