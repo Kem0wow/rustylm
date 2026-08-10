@@ -1,20 +1,12 @@
-use rustylm_core::device;
-use rustylm_core::loader::ModelLoader;
+use rustylm_backend::device;
+use rustylm_models::inspect_model;
 
-fn main() -> anyhow::Result<()> {
-    // 1. Cihazı seç
-    let dev = device::select_device()?;
-    println!("Aktif Donanım: {:?}", dev);
+fn main() {
+    println!("RustyLM Init");
 
-    // 2. Modeli incele
-    // NOT: Buraya gerçek bir dosya yolu yazmalısın!
-    let path = "models/qwen/model.safetensors"; 
+    let device = device::auto();
+    println!("{}", device);
 
-    if std::path::Path::new(path).exists() {
-        ModelLoader::inspect_safe(path)?;
-    } else {
-        println!("Dosya bulunamadı: {}. Lütfen geçerli bir safetensors dosyası koy.", path);
-    }
-
-    Ok(())
+    inspect_model("models/qwen-0.5b/model.safetensors")
+        .expect("Failed to read model");
 }

@@ -1,0 +1,14 @@
+[package]
+name = "rustylm-backend"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+cuda = ["dep:cudarc"]
+
+[dependencies]
+rustylm-core = { path = "../core" }
+
+cudarc = { version = "0.17.8", optional = true, features = ["cuda-version-from-build-system"] }
+anyhow = "1.0"
