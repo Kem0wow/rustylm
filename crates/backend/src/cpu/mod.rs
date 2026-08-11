@@ -1,3 +1,7 @@
+// ====================================================
+// CPU Model Info
+// =====================================================
+
 pub fn name() -> String {
     #[cfg(target_arch = "x86_64")]
     if let Some(cpuid_name) = get_cpuid_name() {

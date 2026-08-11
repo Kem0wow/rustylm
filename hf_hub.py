@@ -1,11 +1,13 @@
 from huggingface_hub import snapshot_download
 
-# snapshot_download klasörü otomatik yönetmek için daha iyidir
 snapshot_download(
-    repo_id="Qwen/Qwen2.5-3B-Instruct", 
-    local_dir="./models/qwen-3b",
-    # Sadece bize lazım olan dosyaları çekelim (VRAM tasarrufu)
-    allow_patterns=["*.safetensors", "*.json", "*.model"]
+    repo_id="google/gemma-4-12B-it-assistant",
+    local_dir="./models/gemma-4-12b-it-assistant",
+    allow_patterns=[
+        "*.safetensors",
+        "*.json",
+        "*.model",
+    ],
 )
 
-print("Model ./models/qwen-3b klasörüne başarıyla indirildi.")
+print("Model başarıyla indirildi.")

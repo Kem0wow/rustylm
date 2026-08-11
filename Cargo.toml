@@ -8,7 +8,6 @@ members = [
     "crates/core",
     "crates/backend",
     "crates/runtime",
-    "crates/models",
 ]
 
 resolver = "2"
@@ -21,4 +20,3 @@ cuda = ["rustylm-backend/cuda"]
 rustylm-core = { path = "crates/core" }
 rustylm-backend = { path = "crates/backend" }
 rustylm-runtime = { path = "crates/runtime" }
-rustylm-models = { path = "crates/models" }

@@ -1,5 +1,9 @@
 use cudarc::driver::{CudaContext, result, sys};
 
+// ====================================================
+// GPU/CUDA Model Info
+// =====================================================
+
 pub fn device_name(ordinal: usize) -> anyhow::Result<String> {
     let dev = result::device::get(ordinal as i32)?;
     let mut name_buf = [0u8; 256];
