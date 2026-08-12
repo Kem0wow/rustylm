@@ -1,0 +1,148 @@
+:root { 
+    --primary: #2DD4BF; 
+    --bg: #09090B; 
+    --card-bg: #111113; 
+    --header-bg: #1C1C1F; 
+    --text: #F4F4F5;
+    --border: rgba(255, 255, 255, 0.12); 
+    --card-border: rgba(255, 255, 255, 0.1); 
+    --card-hover-border: rgba(45, 212, 191, 0.4);
+    --btn-bg: rgba(255, 255, 255, 0.06); 
+    --btn-border: rgba(255, 255, 255, 0.15); 
+    --btn-hover: rgba(255, 255, 255, 0.12);
+    --input-bg: rgba(255, 255, 255, 0.03);
+    --input-border: rgba(255, 255, 255, 0.1);
+    --divider: rgba(255, 255, 255, 0.1); 
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --terminal-ascii: #2DD4BF; 
+    --terminal-ascii-weight: 700; 
+    --terminal-muted: rgba(244, 244, 245, 0.6);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-mode="light"] {
+    --primary: #0D9488; 
+    --bg: #F8FAFC; 
+    --card-bg: #FFFFFF; 
+    --header-bg: #F1F5F9; 
+    --text: #0F172A;
+    --border: rgba(15, 23, 42, 0.14); 
+    --card-border: rgba(15, 23, 42, 0.12); 
+    --card-hover-border: rgba(13, 148, 136, 0.5);
+    --btn-bg: rgba(15, 23, 42, 0.05); 
+    --btn-border: rgba(15, 23, 42, 0.18); 
+    --btn-hover: rgba(15, 23, 42, 0.1);
+    --input-bg: rgba(15, 23, 42, 0.03);
+    --input-border: rgba(15, 23, 42, 0.12);
+    --divider: rgba(15, 23, 42, 0.12); 
+    --shadow-color: rgba(15, 23, 42, 0.08);
+    --terminal-ascii: #0F766E; 
+    --terminal-ascii-weight: 800; 
+    --terminal-muted: #475569;
+}
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--bg); 
+    color: var(--text); 
+    padding-top: 100px; 
+}
+
+.code-font { 
+    font-family: 'Fira Code', monospace; 
+}
+
+.nav-container { 
+    position: fixed; 
+    top: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: calc(90% - 40px); 
+    max-width: 950px; 
+    z-index: 1000; 
+}
+
+.nav-content { 
+    background: var(--card-bg); 
+    border: 1px solid var(--border); 
+    border-radius: 20px; 
+    padding: 12px 24px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    backdrop-filter: blur(12px); 
+    box-shadow: 0 10px 30px var(--shadow-color); 
+}
+
+.window-frame { 
+    background: var(--card-bg); 
+    border: 1px solid var(--border); 
+    border-radius: 16px; 
+    overflow: hidden; 
+    box-shadow: 0 20px 40px var(--shadow-color); 
+}
+
+.window-header { 
+    background: var(--header-bg); 
+    padding: 14px 20px; 
+    border-bottom: 1px solid var(--border); 
+    display: flex; 
+    align-items: center; 
+}
+
+.themed-card { 
+    background-color: var(--card-bg); 
+    border: 1px solid var(--card-border); 
+    transition: all 0.25s ease; 
+}
+
+.themed-card:hover { 
+    border-color: var(--card-hover-border); 
+    transform: translateY(-2px); 
+    box-shadow: 0 12px 24px var(--shadow-color); 
+}
+
+.themed-divider { 
+    border-top: 1px solid var(--divider); 
+}
+
+.btn-secondary, .github-star-badge { 
+    background-color: var(--btn-bg); 
+    border: 1px solid var(--btn-border); 
+    color: var(--text); 
+    transition: all 0.2s ease; 
+}
+
+.btn-secondary:hover, .github-star-badge:hover { 
+    background-color: var(--btn-hover); 
+    border-color: var(--primary); 
+}
+
+.custom-input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+}
+
+.primary-color { color: var(--primary); }
+.bg-primary { background-color: var(--primary); }
+.shadow-neon { box-shadow: 0 0 25px rgba(45, 212, 191, 0.2); }
+
+.terminal-ascii { 
+    line-height: 1.15; 
+    font-size: clamp(10px, 1.8vw, 13px); 
+    color: var(--terminal-ascii); 
+    font-weight: var(--terminal-ascii-weight); 
+    opacity: 1; 
+}
+
+.terminal-muted { 
+    color: var(--terminal-muted); 
+}

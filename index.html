@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | RustyLM</title>
+    <link rel="icon" id="favicon" type="image/png" href="images/icon-dark.png">
+    <script>
+        (function() {
+            const mode = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-mode', mode);
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="selection:bg-teal-500 selection:text-white">
+
+    <!-- Global Reusable SVG Symbols -->
+    <svg class="hidden">
+        <symbol id="gh-icon" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </symbol>
+    </svg>
+
+    <!-- Floating Navbar -->
+    <div class="nav-container">
+        <nav class="nav-content">
+            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
+                <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-10 h-10 object-contain">
+                <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
+                <a href="docs.html" class="hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="hover:primary-color transition">Benchmarks</a>
+                <a href="contact.html" class="hover:primary-color transition">Contacts</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
+                    <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
+                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                    <span id="starCount">1</span>
+                </a>
+                <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
+                <a href="docs.html" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <main id="hero" class="max-w-7xl mx-auto px-8 py-12 flex flex-col items-center text-center">
+        <h1 class="text-[64px] md:text-[84px] font-black leading-[0.9] mb-8 tracking-tighter max-w-4xl">
+            Inference.<br><span class="primary-color">Hardened.</span> By Rust.
+        </h1>
+        <p class="opacity-60 text-lg md:text-xl mb-12 max-w-2xl leading-relaxed">
+            A blazing fast, memory-safe LLM engine built for performance-critical local deployments. Zero telemetry, zero overhead.
+        </p>
+        
+        <div class="flex flex-wrap justify-center gap-4 mb-24">
+            <button class="bg-primary text-white px-10 py-4 rounded-2xl font-extrabold flex items-center gap-3 hover:scale-105 transition shadow-neon">
+                <i data-lucide="terminal" class="w-5 h-5"></i> Start Building
+            </button>
+            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="btn-secondary px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 transition shadow-sm">
+                <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+                <span>GitHub Repository</span>
+            </a>
+        </div>
+
+        <!-- Terminal Window -->
+        <div class="window-frame w-full max-w-4xl text-left shadow-2xl">
+            <div class="window-header">
+                <div class="flex gap-2 mr-6">
+                    <div class="w-3 h-3 rounded-full bg-red-500/40"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500/40"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500/40"></div>
+                </div>
+                <span class="text-[10px] opacity-60 font-bold code-font tracking-widest uppercase">rustylm-cli v0.1.0</span>
+            </div>
+            <div class="p-8 md:p-12 code-font text-[14px] leading-relaxed overflow-hidden">
+                <pre class="terminal-ascii mb-8 overflow-x-auto">
+ ███████████                       █████               █████       ██████   ██████
+▒▒███▒▒▒▒▒███                     ▒▒███               ▒▒███       ▒▒██████ ██████ 
+ ▒███    ▒███  █████ ████  █████  ███████   █████ ████ ▒███        ▒███▒█████▒███ 
+ ▒██████████  ▒▒███ ▒███  ███▒▒  ▒▒▒███▒   ▒▒███ ▒███  ▒███        ▒███▒▒███ ▒███ 
+ ▒███▒▒▒▒▒███  ▒███ ▒███ ▒▒█████   ▒███     ▒███ ▒███  ▒███        ▒███ ▒▒▒  ▒███ 
+ ▒███    ▒███  ▒███ ▒███  ▒▒▒▒███  ▒███ ███ ▒███ ▒███  ▒███      █ ▒███      ▒███ 
+ █████   █████ ▒▒████████ ██████   ▒▒█████  ▒▒███████  ███████████ █████     █████
+▒▒▒▒▒   ▒▒▒▒▒   ▒▒▒▒▒▒▒▒ ▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒███ ▒▒▒▒▒▒▒▒▒▒▒ ▒▒▒▒▒     ▒▒▒▒▒ 
+                                             ███ ▒███                             
+                                            ▒▒██████                              
+                                             ▒▒▒▒▒▒                               </pre>
+                <div class="space-y-2 mb-6">
+                    <div class="flex gap-3">
+                        <span class="primary-color opacity-90 font-black">#</span>
+                        <span>rustylm run qwen2.5-7b --cuda</span>
+                    </div>
+                    <div class="terminal-muted ml-6">
+                        <div>↳ Initializing CUDA stream... done.</div>
+                        <div>↳ Loading 290 tensors to VRAM... (482ms)</div>
+                        <div>↳ Hybrid Offloading: 21 GPU / 7 CPU layers.</div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <span class="primary-color font-bold">You:</span> Explain Zero-Copy.
+                </div>
+                <div class="mb-8 leading-relaxed opacity-90">
+                    <span class="primary-color font-bold">rustylm:</span> Zero-copy in rustylm allows mapping weights directly from disk to memory via mmap, bypassing redundant CPU allocations.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section id="architecture" class="max-w-7xl mx-auto px-8 py-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="p-10 rounded-[32px] themed-card group">
+            <i data-lucide="zap" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
+            <h3 class="text-xl font-bold mb-4">Speed</h3>
+            <p class="text-sm opacity-60 leading-relaxed">Engineered in Rust for bare-metal performance and ultra-low latency.</p>
+        </div>
+        <div class="p-10 rounded-[32px] themed-card group">
+            <i data-lucide="shield-check" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
+            <h3 class="text-xl font-bold mb-4">Safety</h3>
+            <p class="text-sm opacity-60 leading-relaxed">Leverages Rust's borrow checker to ensure memory safety during heavy inference.</p>
+        </div>
+        <div class="p-10 rounded-[32px] themed-card group">
+            <i data-lucide="cpu" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
+            <h3 class="text-xl font-bold mb-4">Accelerator</h3>
+            <p class="text-sm opacity-60 leading-relaxed">Native support for NVIDIA CUDA, Apple Metal, and AMD ROCm.</p>
+        </div>
+        <div class="p-10 rounded-[32px] themed-card group">
+            <i data-lucide="layers" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
+            <h3 class="text-xl font-bold mb-4">Hybrid Mode</h3>
+            <p class="text-sm opacity-60 leading-relaxed">Intelligent layer offloading between CPU and GPU for large models.</p>
+        </div>
+    </section>
+
+    <!-- Local First Section -->
+    <section id="docs" class="max-w-7xl mx-auto px-8 py-24 themed-divider flex flex-col items-center text-center">
+        <div class="inline-block px-4 py-1 bg-teal-500/10 primary-color border border-teal-500/20 rounded-full text-[10px] font-bold uppercase mb-8">Local-First Engine</div>
+        <h2 class="text-5xl md:text-7xl font-black mb-10 tracking-tighter">No Cloud. No Compromise.</h2>
+        <p class="opacity-60 text-xl max-w-3xl leading-relaxed mb-16">
+            rustylm is designed to run entirely on your hardware. 
+            From weight loading to token generation, you have absolute control over your data and environment.
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 w-full max-w-4xl opacity-70">
+            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+                <i data-lucide="wifi-off" class="w-6 h-6 primary-color"></i> Offline
+            </div>
+            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+                <i data-lucide="lock" class="w-6 h-6 primary-color"></i> Private
+            </div>
+            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+                <i data-lucide="binary" class="w-6 h-6 primary-color"></i> Modular
+            </div>
+            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+                <i data-lucide="file-code" class="w-6 h-6 primary-color"></i> MIT Licensed
+            </div>
+        </div>
+    </section>
+
+    <!-- Unified Footer -->
+    <footer class="max-w-7xl mx-auto px-8 py-16 mt-20 themed-divider">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
+            <!-- Left Side: Icon + RustyLM Label & GitHub Logo underneath -->
+            <div class="flex flex-col items-center md:items-start gap-3">
+                <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
+                    <img id="footerIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
+                    <span class="font-black text-xl tracking-tight">RustyLM</span>
+                </a>
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="opacity-60 hover:primary-color transition flex items-center gap-2 text-xs font-semibold" title="GitHub Repository">
+                    <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+                    <span>GitHub Repository</span>
+                </a>
+            </div>
+
+            <!-- Right Side: Wanna Contribute? Button -->
+            <div class="flex items-center">
+                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:scale-105 transition shadow-sm">
+                    <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
+                    <span>Wanna Contribute?</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Center Bottom: Tagline & Copyright -->
+        <div class="text-center pt-8 border-t border-white/5 space-y-2">
+            <p class="text-[11px] font-bold uppercase tracking-[0.4em] opacity-40">&lt; High-Performance Systems Programming &gt;</p>
+            <p class="text-[12px] opacity-60">© 2026 RustyLM Project • All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const modeToggle = document.getElementById('modeToggle');
+        const navIcon = document.getElementById('navIcon');
+        const footerIcon = document.getElementById('footerIcon');
+        const favicon = document.getElementById('favicon');
+        const root = document.documentElement;
+
+        const sunSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+        const moonSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
+        function updateTheme(mode) {
+            root.setAttribute('data-mode', mode);
+            localStorage.setItem('theme', mode);
+            if (modeToggle) modeToggle.innerHTML = mode === 'dark' ? sunSvg : moonSvg;
+            if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (favicon) favicon.href = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (window.lucide) lucide.createIcons();
+        }
+
+        updateTheme(localStorage.getItem('theme') || root.getAttribute('data-mode') || 'dark');
+
+        if (modeToggle) {
+            modeToggle.addEventListener('click', () => {
+                updateTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        async function fetchStarCount() {
+            const cached = localStorage.getItem('gh_stars');
+            const cachedTime = localStorage.getItem('gh_stars_time');
+            if (cached) {
+                const el = document.getElementById('starCount');
+                if (el) el.textContent = cached;
+            }
+            if (cachedTime && (Date.now() - cachedTime < 600000)) return;
+            try {
+                const res = await fetch('https://api.github.com/repos/Kem0wow/rustylm');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.stargazers_count !== undefined) {
+                        const el = document.getElementById('starCount');
+                        if (el) el.textContent = data.stargazers_count;
+                        localStorage.setItem('gh_stars', data.stargazers_count);
+                        localStorage.setItem('gh_stars_time', Date.now());
+                    }
+                }
+            } catch (e) {}
+        }
+        fetchStarCount();
+    </script>
+</body>
+</html>

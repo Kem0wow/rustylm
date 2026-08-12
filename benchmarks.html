@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmarks  | RustyLM</title>
+    <link rel="icon" id="favicon" type="image/png" href="images/icon-dark.png">
+    <script>
+        (function() {
+            const mode = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-mode', mode);
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="selection:bg-teal-500 selection:text-white">
+
+    <!-- Global Reusable SVG Symbols -->
+    <svg class="hidden">
+        <symbol id="gh-icon" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </symbol>
+    </svg>
+
+    <!-- Floating Navbar -->
+    <div class="nav-container">
+        <nav class="nav-content">
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="btn-secondary p-2.5 rounded-xl flex items-center justify-center hover:scale-105 transition" title="Back to Home" aria-label="Back to Home">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </a>
+                <a href="index.html" class="flex items-center gap-2.5 hover:opacity-80 transition cursor-pointer ml-1">
+                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-9 h-9 object-contain">
+                    <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
+                <a href="docs.html" class="hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="primary-color font-extrabold transition">Benchmarks</a>
+                <a href="contacts.html" class="hover:primary-color transition">Contacts</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
+                    <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
+                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                    <span id="starCount">1</span>
+                </a>
+                <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
+                <a href="docs.html" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Coming Soon Hero Content -->
+    <main class="max-w-7xl mx-auto px-8 py-12 flex flex-col items-center text-center">
+
+        <div class="inline-block px-4 py-1.5 bg-teal-500/10 primary-color border border-teal-500/20 rounded-full text-xs font-bold uppercase tracking-wider mb-8 flex items-center gap-2">
+            <i data-lucide="gauge" class="w-4 h-4 animate-pulse"></i>
+            <span>Performance Suite Under Construction</span>
+        </div>
+
+        <h1 class="text-5xl md:text-8xl font-black leading-[1] mb-8 tracking-tighter max-w-4xl">
+            Benchmarks<br><span class="primary-color">Coming Soon.</span>
+        </h1>
+        
+        <p class="opacity-60 text-lg md:text-xl mb-12 max-w-2xl leading-relaxed">
+            We are currently running comprehensive latency, memory throughput, and tokens-per-second benchmark suites comparing RustyLM against other frameworks.
+        </p>
+
+        <!-- Preview Feature Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mb-16 text-left">
+            <div class="p-8 rounded-[28px] themed-card space-y-4">
+                <div class="w-10 h-10 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
+                </div>
+                <h3 class="text-lg font-bold">Tokens/Sec Speed</h3>
+                <p class="text-xs opacity-60 leading-relaxed">TTFT (Time To First Token) and sustained generation speed across concurrent batch sizes.</p>
+            </div>
+            
+            <div class="p-8 rounded-[28px] themed-card space-y-4">
+                <div class="w-10 h-10 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                </div>
+                <h3 class="text-lg font-bold">VRAM Efficiency</h3>
+                <p class="text-xs opacity-60 leading-relaxed">Memory footprint analysis showing Zero-Copy mmap savings vs standard GPU allocations.</p>
+            </div>
+
+            <div class="p-8 rounded-[28px] themed-card space-y-4">
+                <div class="w-10 h-10 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
+                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                </div>
+                <h3 class="text-lg font-bold">Hardware Matrix</h3>
+                <p class="text-xs opacity-60 leading-relaxed">Comparative performance graphs across different hardware platforms (NVIDIA, AMD, Apple).</p>
+            </div>
+        </div>
+
+        <!-- Action Callouts -->
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="bg-primary text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:scale-105 transition shadow-sm">
+                <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+                <span>Follow on GitHub</span>
+            </a>
+            <a href="contacts.html" class="btn-secondary px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:scale-105 transition shadow-sm">
+                <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
+                <span>Wanna Submit Benchmark Data?</span>
+            </a>
+        </div>
+    </main>
+
+    <!-- Unified Footer -->
+    <footer class="max-w-7xl mx-auto px-8 py-16 mt-20 themed-divider">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
+            <!-- Left Side: Icon + RustyLM Label & GitHub Logo underneath -->
+            <div class="flex flex-col items-center md:items-start gap-3">
+                <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
+                    <img id="footerIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
+                    <span class="font-black text-xl tracking-tight">RustyLM</span>
+                </a>
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="opacity-60 hover:primary-color transition flex items-center gap-2 text-xs font-semibold" title="GitHub Repository">
+                    <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+                    <span>GitHub Repository</span>
+                </a>
+            </div>
+
+            <!-- Right Side: Wanna Contribute? Button -->
+            <div class="flex items-center">
+                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:scale-105 transition shadow-sm">
+                    <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
+                    <span>Wanna Contribute?</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Center Bottom: Tagline & Copyright -->
+        <div class="text-center pt-8 border-t border-white/5 space-y-2">
+            <p class="text-[11px] font-bold uppercase tracking-[0.4em] opacity-40">&lt; High-Performance Systems Programming &gt;</p>
+            <p class="text-[12px] opacity-60">© 2026 RustyLM Project • All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const modeToggle = document.getElementById('modeToggle');
+        const navIcon = document.getElementById('navIcon');
+        const footerIcon = document.getElementById('footerIcon');
+        const favicon = document.getElementById('favicon');
+        const root = document.documentElement;
+
+        const sunSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+        const moonSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+
+        function updateTheme(mode) {
+            root.setAttribute('data-mode', mode);
+            localStorage.setItem('theme', mode);
+            if (modeToggle) modeToggle.innerHTML = mode === 'dark' ? sunSvg : moonSvg;
+            if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (favicon) favicon.href = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (window.lucide) lucide.createIcons();
+        }
+
+        updateTheme(localStorage.getItem('theme') || root.getAttribute('data-mode') || 'dark');
+
+        if (modeToggle) {
+            modeToggle.addEventListener('click', () => {
+                updateTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        async function fetchStarCount() {
+            const cached = localStorage.getItem('gh_stars');
+            const cachedTime = localStorage.getItem('gh_stars_time');
+            if (cached) {
+                const el = document.getElementById('starCount');
+                if (el) el.textContent = cached;
+            }
+            if (cachedTime && (Date.now() - cachedTime < 600000)) return;
+            try {
+                const res = await fetch('https://api.github.com/repos/Kem0wow/rustylm');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.stargazers_count !== undefined) {
+                        const el = document.getElementById('starCount');
+                        if (el) el.textContent = data.stargazers_count;
+                        localStorage.setItem('gh_stars', data.stargazers_count);
+                        localStorage.setItem('gh_stars_time', Date.now());
+                    }
+                }
+            } catch (e) {}
+        }
+        fetchStarCount();
+    </script>
+</body>
+</html>
