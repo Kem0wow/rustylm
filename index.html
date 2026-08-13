@@ -28,25 +28,60 @@
     <!-- Floating Navbar -->
     <div class="nav-container">
         <nav class="nav-content">
-            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
-                <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-10 h-10 object-contain">
-                <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
+            <a href="index.html" class="flex items-center gap-2.5 hover:opacity-80 transition cursor-pointer">
+                <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-9 h-9 object-contain">
+                <span class="font-black text-lg tracking-tight">RustyLM</span>
             </a>
             <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
                 <a href="docs.html" class="hover:primary-color transition">Docs</a>
                 <a href="benchmarks.html" class="hover:primary-color transition">Benchmarks</a>
                 <a href="contacts.html" class="hover:primary-color transition">Contacts</a>
             </div>
-            <div class="flex items-center gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
                     <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
-                    <span id="starCount">1</span>
+                    <span class="starCountEl">1</span>
                 </a>
                 <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+                <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
             </div>
         </nav>
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobileMenu" class="mobile-menu md:hidden">
+            <div class="flex flex-col gap-1 text-xs font-bold uppercase tracking-[0.15em]">
+                <a href="docs.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
+                    <span>Docs</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
+                </a>
+                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
+                    <span>Benchmarks</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
+                </a>
+                <a href="contacts.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
+                    <span>Contacts</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
+                </a>
+            </div>
+            <div class="themed-divider pt-3 flex flex-col gap-2.5">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between w-full">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
+                        <span>GitHub Repository</span>
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                        <span class="starCountEl">1</span>
+                    </span>
+                </a>
+                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition shadow-sm w-full block">
+                    Installation
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Hero Section -->
@@ -223,8 +258,7 @@
             const cached = localStorage.getItem('gh_stars');
             const cachedTime = localStorage.getItem('gh_stars_time');
             if (cached) {
-                const el = document.getElementById('starCount');
-                if (el) el.textContent = cached;
+                document.querySelectorAll('.starCountEl').forEach(el => el.textContent = cached);
             }
             if (cachedTime && (Date.now() - cachedTime < 600000)) return;
             try {
@@ -232,8 +266,7 @@
                 if (res.ok) {
                     const data = await res.json();
                     if (data.stargazers_count !== undefined) {
-                        const el = document.getElementById('starCount');
-                        if (el) el.textContent = data.stargazers_count;
+                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = data.stargazers_count);
                         localStorage.setItem('gh_stars', data.stargazers_count);
                         localStorage.setItem('gh_stars_time', Date.now());
                     }
@@ -241,6 +274,37 @@
             } catch (e) {}
         }
         fetchStarCount();
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = mobileMenu.classList.contains('active');
+                if (isOpen) {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
+                } else {
+                    mobileMenu.classList.add('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                    mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
+                }
+                if (window.lucide) lucide.createIcons();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    if (mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                        mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
+                        if (window.lucide) lucide.createIcons();
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
