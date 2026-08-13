@@ -228,30 +228,41 @@
         const mobileMenu = document.getElementById('mobileMenu');
 
         if (mobileMenuBtn && mobileMenu) {
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function openMobileMenu() {
+                mobileMenu.classList.add('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
+                if (window.lucide) lucide.createIcons();
+            }
+
             mobileMenuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const isOpen = mobileMenu.classList.contains('active');
-                if (isOpen) {
-                    mobileMenu.classList.remove('active');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                    mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
+                if (mobileMenu.classList.contains('active')) {
+                    closeMobileMenu();
                 } else {
-                    mobileMenu.classList.add('active');
-                    mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                    mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
+                    openMobileMenu();
                 }
-                if (window.lucide) lucide.createIcons();
             });
 
             document.addEventListener('click', (e) => {
                 if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
                     if (mobileMenu.classList.contains('active')) {
-                        mobileMenu.classList.remove('active');
-                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                        mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
-                        if (window.lucide) lucide.createIcons();
+                        closeMobileMenu();
                     }
                 }
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
             });
         }
     </script>
