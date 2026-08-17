@@ -1,4 +1,4 @@
-# rustylm
+# RustyLM
 
 Small, fast local LLM inference in Rust. Loads a Hugging Face model directory
 (`config.json` + `tokenizer.json` + `*.safetensors`) and answers questions on
@@ -72,3 +72,11 @@ The architecture and chat template are picked from `config.json`.
 
 `.cargo/config.toml` sets `-C target-cpu=native` for the SIMD path. Remove it
 before building binaries meant to run on another machine.
+
+---
+
+## Future Plans
+
+- [ ] Add more quantization types
+- [ ] Expand model support
+- [ ] Add a benchmark feature on the CLI to post benchmark results to our site: [kem0wow.github.io/rustylm](https://kem0wow.github.io/rustylm/benchmarks.html)
