@@ -1,40 +1,51 @@
 use std::fmt;
-use crate::cpu;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Device {
-    Cpu {
-        name: String,
-    },
+    #[default]
+    Auto,
+    Cpu,
+    Cuda,
+}
 
-    #[cfg(feature = "cuda")]
-    Cuda {
-        index: usize,
-        name: String,
-    },
+impl Device {
+    /// Turn `Auto` into whatever this machine actually has.
+    pub fn resolve(self) -> Self {
+        match self {
+            Self::Auto if cuda_available() => Self::Cuda,
+            Self::Auto => Self::Cpu,
+            other => other,
+        }
+    }
+
+    pub fn is_cuda(self) -> bool {
+        self == Self::Cuda
+    }
 }
 
 impl fmt::Display for Device {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Device::Cpu { name } => write!(f, "Using CPU - {}", name),
-            #[cfg(feature = "cuda")]
-            Device::Cuda { name, .. } => write!(f, "Using CUDA - {}", name),
+            Self::Auto => write!(f, "auto"),
+            Self::Cpu => write!(f, "{}", crate::cpu::name()),
+            Self::Cuda => {
+                #[cfg(feature = "cuda")]
+                if let Ok(name) = crate::cuda::device_name(0) {
+                    return write!(f, "{name} + {}", crate::cpu::name());
+                }
+                write!(f, "cuda")
+            }
         }
     }
 }
 
-pub fn auto() -> Device {
+pub fn cuda_available() -> bool {
     #[cfg(feature = "cuda")]
     {
-        if cudarc::driver::CudaContext::new(0).is_ok() {
-            if let Ok(name) = crate::cuda::device_name(0) {
-                return Device::Cuda { index: 0, name };
-            }
-        }
+        crate::cuda::available()
     }
-
-    Device::Cpu {
-        name: cpu::name(),
+    #[cfg(not(feature = "cuda"))]
+    {
+        false
     }
 }

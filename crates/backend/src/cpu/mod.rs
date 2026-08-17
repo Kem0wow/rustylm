@@ -1,6 +1,4 @@
-// ====================================================
-// CPU Model Info
-// =====================================================
+pub mod ops;
 
 pub fn name() -> String {
     #[cfg(target_arch = "x86_64")]
@@ -20,19 +18,18 @@ pub fn name() -> String {
 fn get_cpuid_name() -> Option<String> {
     use std::arch::x86_64::__cpuid;
     unsafe {
-        let highest_ext_leaf = __cpuid(0x80000000).eax;
-        if highest_ext_leaf < 0x80000004 {
+        if __cpuid(0x80000000).eax < 0x80000004 {
             return None;
         }
         let mut bytes = [0u8; 48];
-        for (i, leaf) in [0x80000002u32, 0x80000003, 0x80000004].iter().enumerate() {
-            let res = __cpuid(*leaf);
+        for (i, &leaf) in [0x80000002u32, 0x80000003, 0x80000004].iter().enumerate() {
+            let res = __cpuid(leaf);
             let leaf_bytes: [u8; 16] = std::mem::transmute([res.eax, res.ebx, res.ecx, res.edx]);
             bytes[i * 16..(i + 1) * 16].copy_from_slice(&leaf_bytes);
         }
-        let s = std::str::from_utf8(&bytes).ok()?.trim_matches('\0').trim().to_string();
+        let s = std::str::from_utf8(&bytes).ok()?.trim_matches('\0').trim();
         if !s.is_empty() {
-            return Some(s);
+            return Some(s.to_string());
         }
     }
     None
@@ -44,9 +41,9 @@ fn get_proc_cpuinfo_name() -> Option<String> {
     for line in content.lines() {
         if line.starts_with("model name") || line.starts_with("Processor") {
             if let Some((_, val)) = line.split_once(':') {
-                let name = val.trim().to_string();
+                let name = val.trim();
                 if !name.is_empty() {
-                    return Some(name);
+                    return Some(name.to_string());
                 }
             }
         }

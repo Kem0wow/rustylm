@@ -4,19 +4,19 @@ version = "0.1.0"
 edition = "2024"
 
 [workspace]
-members = [
-    "crates/core",
-    "crates/backend",
-    "crates/runtime",
-]
-
+members = ["crates/core", "crates/backend", "crates/runtime"]
 resolver = "2"
 
 [features]
 default = []
-cuda = ["rustylm-backend/cuda"]
+cuda = ["rustylm-runtime/cuda"]
 
 [dependencies]
-rustylm-core = { path = "crates/core" }
-rustylm-backend = { path = "crates/backend" }
 rustylm-runtime = { path = "crates/runtime" }
+anyhow = "1.0"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"

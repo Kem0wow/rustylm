@@ -1,24 +1,22 @@
-use cudarc::driver::{CudaContext, result, sys};
+pub mod ops;
 
-// ====================================================
-// GPU/CUDA Model Info
-// =====================================================
+use anyhow::Result;
+use cudarc::driver::{result, sys};
 
-pub fn device_name(ordinal: usize) -> anyhow::Result<String> {
+pub use ops::{Gpu, GpuMat};
+
+pub fn device_name(ordinal: usize) -> Result<String> {
     let dev = result::device::get(ordinal as i32)?;
-    let mut name_buf = [0u8; 256];
+    let mut buf = [0u8; 256];
     unsafe {
-        let res = sys::cuDeviceGetName(name_buf.as_mut_ptr() as *mut std::ffi::c_char, name_buf.len() as i32, dev);
-        if res != sys::CUresult::CUDA_SUCCESS {
-            anyhow::bail!("cuDeviceGetName failed: {:?}", res);
+        let r = sys::cuDeviceGetName(buf.as_mut_ptr() as *mut _, buf.len() as i32, dev);
+        if r != sys::CUresult::CUDA_SUCCESS {
+            anyhow::bail!("cuDeviceGetName failed: {r:?}");
         }
     }
-    let name_str = std::ffi::CStr::from_bytes_until_nul(&name_buf)?.to_str()?.to_string();
-    Ok(name_str)
+    Ok(std::ffi::CStr::from_bytes_until_nul(&buf)?.to_str()?.to_string())
 }
 
-pub fn init() -> anyhow::Result<()> {
-    let _ctx = CudaContext::new(0)?;
-    println!("CUDA initialized");
-    Ok(())
+pub fn available() -> bool {
+    cudarc::driver::CudaContext::new(0).is_ok()
 }

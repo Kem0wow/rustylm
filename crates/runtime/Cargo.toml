@@ -3,4 +3,12 @@ name = "rustylm-runtime"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = []
+cuda = ["rustylm-backend/cuda"]
+
 [dependencies]
+rustylm-core    = { path = "../core" }
+rustylm-backend = { path = "../backend" }
+anyhow          = "1.0"
+rayon           = "1.10"

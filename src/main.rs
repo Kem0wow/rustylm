@@ -1,66 +1,81 @@
-use rustylm_backend::device;
-use rustylm_core::architecture::Architecture;
-use rustylm_core::config::ModelConfig;
-use std::path::PathBuf;
+use std::io::{self, Write};
 
-fn main() {
-    println!("RustyLM Init");
+use rustylm_runtime::{Device, Engine, Params};
 
-    let device = device::auto();
-    println!("Device: {}", device);
+fn main() -> anyhow::Result<()> {
+    let mut args = std::env::args().skip(1);
+    let mut dir = std::env::var("MODEL_DIR").unwrap_or_else(|_| "models/qwen2.5-1.5b-instruct".into());
+    let mut device = Device::Auto;
+    let mut question = None;
+    let mut params = Params::default();
 
-    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let model_dirs = [
-        "models/qwen2.5-0.5b-instruct",
-        "models/llama3.2-1b-instruct",
-        "models/gemma-4-12b-it-assistant",
-    ];
-
-    for model_dir in model_dirs {
-        let config_path = manifest_dir.join(model_dir).join("config.json");
-        println!("\n--------------------------------------------------");
-        println!("Checking model: {}", model_dir);
-
-        if config_path.exists() {
-            match ModelConfig::load_config(&config_path) {
-                Ok(config) => {
-                    let architecture = Architecture::detect(&config);
-
-                    println!("[ModelConfig Loaded Successfully]");
-                    println!("  Model type: {}", config.model_type);
-                    println!("  Detected Architecture: {} (Supported: {})", architecture, architecture.is_supported());
-
-                    println!("  Hidden size: {}", config.hidden_size);
-                    println!("  Intermediate size: {}", config.intermediate_size);
-                    println!("  Hidden layers: {}", config.num_hidden_layers);
-
-                    println!(
-                        "  Attention: {} Q heads / {} KV heads",
-                        config.num_attention_heads,
-                        config.num_key_value_heads
-                    );
-
-                    println!("  Head dimension: {}", config.head_dim());
-                    println!("  KV groups (GQA): {}", config.num_key_value_groups());
-                    println!("  Vocabulary size: {}", config.vocab_size);
-
-                    println!("  Activation: {}", config.hidden_act);
-                    println!("  RMSNorm epsilon: {}", config.rms_norm_eps);
-                    println!("  RoPE theta: {}", config.rope_theta);
-                    println!(
-                        "  Max position embeddings: {}",
-                        config.max_position_embeddings
-                    );
-                    if let Some(eos) = &config.eos_token_id {
-                        println!("  EOS token ID(s): {:?}", eos);
-                    }
-                }
-                Err(e) => {
-                    eprintln!("Failed to load model config from {:?}: {}", config_path, e);
-                }
-            }
-        } else {
-            println!("Config file not found at {:?}", config_path);
+    while let Some(arg) = args.next() {
+        match arg.as_str() {
+            "-m" | "--model" => dir = args.next().unwrap_or(dir),
+            "-p" | "--prompt" => question = args.next(),
+            "-t" | "--temp" => params.temperature = args.next().and_then(|v| v.parse().ok()).unwrap_or(0.7),
+            "-n" | "--max-tokens" => params.max_tokens = args.next().and_then(|v| v.parse().ok()).unwrap_or(512),
+            "--cuda" => device = Device::Cuda,
+            "--cpu" => device = Device::Cpu,
+            "-h" | "--help" => return help(),
+            other => anyhow::bail!("unknown argument: {other}"),
         }
     }
+
+    print!("loading {dir} ... ");
+    io::stdout().flush()?;
+    let engine = Engine::load(&dir, device)?;
+    println!("{} on {}", engine.architecture(), engine.device());
+    if engine.vram_bytes() > 0 {
+        println!("{} MiB of weights in VRAM", engine.vram_bytes() >> 20);
+    }
+
+    if let Some(q) = question {
+        return run(&engine, &q, &params);
+    }
+
+    loop {
+        print!("\n> ");
+        io::stdout().flush()?;
+        let mut line = String::new();
+        if io::stdin().read_line(&mut line)? == 0 {
+            break;
+        }
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
+        }
+        if matches!(line, "quit" | "exit" | "q") {
+            break;
+        }
+        run(&engine, line, &params)?;
+    }
+    Ok(())
+}
+
+fn run(engine: &Engine, question: &str, params: &Params) -> anyhow::Result<()> {
+    let stats = engine.generate(question, params, |chunk| {
+        print!("{chunk}");
+        io::stdout().flush().ok();
+    })?;
+    println!(
+        "\n\n[{} prompt tokens in {:.2}s | {} generated at {:.1} tok/s]",
+        stats.prompt_tokens,
+        stats.prefill_secs,
+        stats.generated,
+        stats.tokens_per_sec()
+    );
+    Ok(())
+}
+
+fn help() -> anyhow::Result<()> {
+    println!(
+        "rustylm [options]\n\
+         \x20 -m, --model DIR      model directory\n\
+         \x20 -p, --prompt TEXT    answer once and exit\n\
+         \x20 -t, --temp F         sampling temperature (default 0.7)\n\
+         \x20 -n, --max-tokens N   generation limit (default 512)\n\
+         \x20     --cuda / --cpu   force a backend (default: auto)"
+    );
+    Ok(())
 }

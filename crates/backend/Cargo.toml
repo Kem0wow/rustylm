@@ -9,6 +9,6 @@ cuda = ["dep:cudarc"]
 
 [dependencies]
 rustylm-core = { path = "../core" }
-
 cudarc = { version = "0.17.8", optional = true, features = ["cuda-version-from-build-system"] }
 anyhow = "1.0"
+rayon = "1.10"
