@@ -108,8 +108,9 @@ pub fn repeat_penalty(logits: &mut [f32], recent: &[u32], penalty: f32) {
         return;
     }
     for &t in recent {
-        let l = &mut logits[t as usize];
-        *l = if *l > 0.0 { *l / penalty } else { *l * penalty };
+        if let Some(l) = logits.get_mut(t as usize) {
+            *l = if *l > 0.0 { *l / penalty } else { *l * penalty };
+        }
     }
 }
 

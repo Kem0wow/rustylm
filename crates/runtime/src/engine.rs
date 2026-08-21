@@ -254,6 +254,8 @@ impl Engine {
             cpu::add_into(&mut x, &layer.down.forward(&gate));
         }
 
+        kv.increment_seq();
+
         let xn = cpu::rms_norm(&x, &self.out_norm, c.eps);
         self.head.forward(&xn)
     }
