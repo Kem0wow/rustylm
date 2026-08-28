@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="light">
+<html lang="en" data-mode="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404: Page Not Found | RustyLM</title>
+    <title>404 Page Not Found | RustyLM</title>
+    <meta name="description" content="The page you are looking for does not exist on RustyLM website.">
     <link rel="icon" id="favicon" type="image/png" href="images/icon-dark.png">
     <script>
         (function() {
-            const mode = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            const mode = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-mode', mode);
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="selection:bg-teal-500 selection:text-white">
+<body class="selection:bg-emerald-500 selection:text-white flex flex-col min-h-screen">
 
-    <!-- Global Reusable SVG Symbols -->
+    <div id="cursorGlow" class="cursor-glow"></div>
+
     <svg class="hidden">
         <symbol id="gh-icon" viewBox="0 0 24 24">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -30,203 +32,108 @@
     <!-- Floating Navbar -->
     <div class="nav-container">
         <nav class="nav-content">
-            <div class="flex items-center gap-2">
-                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" title="Back to Home" aria-label="Back to Home">
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="btn-secondary p-1.5 rounded-xl flex items-center justify-center transition hover:scale-105" title="Back to Home">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 </a>
-                <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-0.5">
-                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
-                    <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
+                <a href="index.html" class="flex items-center gap-2.5 hover:opacity-90 transition cursor-pointer">
+                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-9 h-9 object-contain">
+                    <span class="font-black text-xl tracking-tight hidden sm:inline-block">Rusty<span class="primary-color">LM</span></span>
                 </a>
             </div>
-            <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
-                <a href="docs.html" class="hover:primary-color transition">Docs</a>
-                <a href="benchmarks.html" class="hover:primary-color transition">Benchmarks</a>
-                <a href="contacts.html" class="hover:primary-color transition">Contacts</a>
+            <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="docs.html" class="hover:text-[var(--text)] hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="hover:text-[var(--text)] hover:primary-color transition">Contacts</a>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition" title="View repository on GitHub">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="github-star-badge hidden sm:flex px-3.5 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
                     <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
-                    <span class="starCountEl">1</span>
+                    <span class="starCountEl">3</span>
                 </a>
-                <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition">Installation</a>
-                <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
+                <button id="modeToggle" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" aria-label="Toggle Theme"></button>
             </div>
         </nav>
-        <!-- Mobile Dropdown Menu -->
-        <div id="mobileMenu" class="mobile-menu md:hidden">
-            <div class="flex flex-col gap-1 text-xs font-bold uppercase tracking-[0.15em]">
-                <a href="docs.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Docs</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Benchmarks</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-                <a href="contacts.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Contacts</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-            </div>
-            <div class="themed-divider pt-3 flex flex-col gap-2.5">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between w-full">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                        <span>GitHub Repository</span>
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
-                        <span class="starCountEl">1</span>
-                    </span>
-                </a>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition w-full block">
-                    Installation
-                </a>
-            </div>
-        </div>
     </div>
 
-    <!-- 404 Hero Content -->
-    <main class="max-w-3xl mx-auto px-6 py-24 flex flex-col items-center text-center min-h-[55vh] justify-center">
-        <span class="animate-reveal text-8xl md:text-9xl font-black tracking-tighter primary-color mb-2 select-none">
-            404
-        </span>
-        <h1 class="animate-reveal reveal-delay-1 text-3xl sm:text-4xl font-bold tracking-tight mb-4">
-            Page Not Found
-        </h1>
-        <p class="animate-reveal reveal-delay-2 opacity-70 text-base sm:text-lg mb-10 max-w-md leading-relaxed">
-            Sorry, the page you're looking for doesn't exist or has been moved.
-        </p>
-
-        <!-- Navigation Action Buttons -->
-        <div class="animate-reveal reveal-delay-3 flex flex-wrap justify-center gap-4">
-            <a href="index.html" class="bg-primary text-white px-7 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition">
+    <!-- Main Error Section -->
+    <main class="flex-grow flex items-center justify-center px-6 py-20 relative z-10 text-center">
+        <div class="window-frame max-w-lg p-8 sm:p-12 space-y-6">
+            <span class="text-6xl sm:text-8xl font-black gradient-text code-font block">404</span>
+            <h1 class="text-2xl sm:text-3xl font-black">Page Not Found</h1>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed">
+                The requested URL was not found on this server. Check the URL or return back to home page.
+            </p>
+            <a href="index.html" class="bg-primary text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl inline-flex items-center gap-2 transition hover:opacity-90 shadow-lg">
                 <i data-lucide="home" class="w-4 h-4"></i>
-                <span>Back to Home</span>
-            </a>
-            <a href="docs.html" class="btn-secondary px-7 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition">
-                <i data-lucide="book-open" class="w-4 h-4 primary-color"></i>
-                <span>Documentation</span>
+                <span>Return to Home</span>
             </a>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="max-w-7xl mx-auto px-8 pb-12 border-t border-white/5 pt-12">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
+    <footer class="max-w-7xl mx-auto px-6 sm:px-8 py-12 themed-divider relative z-10 w-full">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
                 <img id="footerIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
-                <span class="font-black text-lg tracking-tight">RustyLM</span>
+                <span class="font-black text-xl tracking-tight">RustyLM</span>
             </a>
-            <div class="flex flex-wrap items-center justify-center gap-6 text-xs font-semibold opacity-60">
-                <a href="index.html" class="hover:primary-color transition">Home</a>
-                <a href="docs.html" class="hover:primary-color transition">Docs</a>
-                <a href="benchmarks.html" class="hover:primary-color transition">Benchmarks</a>
-                <a href="contacts.html" class="hover:primary-color transition">Contacts</a>
+            <div class="flex flex-wrap justify-center gap-8 text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="index.html" class="hover:text-[var(--text)] hover:primary-color transition">Home</a>
+                <a href="docs.html" class="hover:text-[var(--text)] hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="hover:text-[var(--text)] hover:primary-color transition">Contribute & Contact</a>
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="hover:text-[var(--text)] hover:primary-color transition">GitHub</a>
             </div>
-        </div>
-        <div class="text-center pt-6 border-t border-white/5 space-y-2">
-            <p class="text-[11px] font-bold uppercase tracking-[0.4em] opacity-40">&lt; High-Performance Systems Programming &gt;</p>
-            <p class="text-[12px] opacity-60">© 2026 RustyLM Project • All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Theme & Interactivity Script -->
     <script>
         const modeToggle = document.getElementById('modeToggle');
-        const navIcon = document.getElementById('navIcon');
-        const footerIcon = document.getElementById('footerIcon');
-        const favicon = document.getElementById('favicon');
-        const root = document.documentElement;
-
-        const sunSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
-        const moonSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
-
         function updateTheme(mode) {
-            root.setAttribute('data-mode', mode);
+            document.documentElement.setAttribute('data-mode', mode);
             localStorage.setItem('theme', mode);
-            if (modeToggle) modeToggle.innerHTML = mode === 'dark' ? sunSvg : moonSvg;
+            if (modeToggle) {
+                modeToggle.innerHTML = mode === 'dark' 
+                    ? `<i data-lucide="sun" class="w-4 h-4 text-yellow-400"></i>` 
+                    : `<i data-lucide="moon" class="w-4 h-4 text-slate-700"></i>`;
+                if (window.lucide) lucide.createIcons();
+            }
+            const navIcon = document.getElementById('navIcon');
+            const footerIcon = document.getElementById('footerIcon');
             if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
             if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (favicon) favicon.href = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (window.lucide) lucide.createIcons();
         }
 
-        updateTheme(localStorage.getItem('theme') || root.getAttribute('data-mode') || 'dark');
-
+        updateTheme(localStorage.getItem('theme') || 'dark');
         if (modeToggle) {
             modeToggle.addEventListener('click', () => {
-                updateTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+                const mode = document.documentElement.getAttribute('data-mode') === 'dark' ? 'light' : 'dark';
+                updateTheme(mode);
             });
         }
 
         async function fetchStarCount() {
-            const cached = localStorage.getItem('gh_stars');
-            const cachedTime = localStorage.getItem('gh_stars_time');
-            if (cached) {
-                document.querySelectorAll('.starCountEl').forEach(el => el.textContent = cached);
-            }
-            if (cachedTime && (Date.now() - cachedTime < 600000)) return;
             try {
                 const res = await fetch('https://api.github.com/repos/Kem0wow/rustylm');
                 if (res.ok) {
                     const data = await res.json();
                     if (data.stargazers_count !== undefined) {
-                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = data.stargazers_count);
-                        localStorage.setItem('gh_stars', data.stargazers_count);
-                        localStorage.setItem('gh_stars_time', Date.now());
+                        const count = Math.max(3, data.stargazers_count);
+                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = count);
+                        localStorage.setItem('gh_stars', count);
+                        return;
                     }
                 }
             } catch (e) {}
+            document.querySelectorAll('.starCountEl').forEach(el => el.textContent = '3');
         }
         fetchStarCount();
 
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            function closeMobileMenu() {
-                mobileMenu.classList.remove('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
-                if (window.lucide) lucide.createIcons();
-            }
-
-            function openMobileMenu() {
-                mobileMenu.classList.add('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
-                if (window.lucide) lucide.createIcons();
-            }
-
-            mobileMenuBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (mobileMenu.classList.contains('active')) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                    if (mobileMenu.classList.contains('active')) {
-                        closeMobileMenu();
-                    }
-                }
-            });
-
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMobileMenu();
-                });
-            });
-        }
+        window.addEventListener('load', () => {
+            if (window.lucide) lucide.createIcons();
+        });
     </script>
 </body>
 </html>

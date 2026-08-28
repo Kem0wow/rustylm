@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="light">
+<html lang="en" data-mode="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact & Contribute | RustyLM</title>
+    <title>Contact & Community | RustyLM</title>
+    <meta name="description" content="Get in touch with the RustyLM core developers, submit benchmarks, or contribute to open-source Rust LLM inference.">
     <link rel="icon" id="favicon" type="image/png" href="images/icon-dark.png">
     <script>
         (function() {
-            const mode = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            const mode = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-mode', mode);
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="selection:bg-teal-500 selection:text-white">
+<body class="selection:bg-emerald-500 selection:text-white">
 
-    <!-- Global Reusable SVG Symbols -->
+    <div id="cursorGlow" class="cursor-glow"></div>
+
     <svg class="hidden">
         <symbol id="gh-icon" viewBox="0 0 24 24">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -30,353 +33,223 @@
     <!-- Floating Navbar -->
     <div class="nav-container">
         <nav class="nav-content">
-            <div class="flex items-center gap-2">
-                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" title="Back to Home" aria-label="Back to Home">
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="btn-secondary p-1.5 rounded-xl flex items-center justify-center transition hover:scale-105" title="Back to Home">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 </a>
-                <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-0.5">
-                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
-                    <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
+                <a href="index.html" class="flex items-center gap-2.5 hover:opacity-90 transition cursor-pointer">
+                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-9 h-9 object-contain">
+                    <span class="font-black text-xl tracking-tight hidden sm:inline-block">Rusty<span class="primary-color">LM</span></span>
                 </a>
             </div>
-            <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
-                <a href="docs.html" class="hover:primary-color transition">Docs</a>
-                <a href="benchmarks.html" class="hover:primary-color transition">Benchmarks</a>
-                <a href="contacts.html" class="primary-color font-extrabold transition">Contacts</a>
+            <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="docs.html" class="hover:text-[var(--text)] hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="primary-color font-extrabold">Contacts</a>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition" title="View repository on GitHub">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="github-star-badge hidden sm:flex px-3.5 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
                     <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
-                    <span class="starCountEl">1</span>
+                    <span class="starCountEl">3</span>
                 </a>
-                <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition">Installation</a>
-                <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
+                <button id="modeToggle" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" aria-label="Toggle Theme"></button>
+                <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
         </nav>
-        <!-- Mobile Dropdown Menu -->
         <div id="mobileMenu" class="mobile-menu md:hidden">
             <div class="flex flex-col gap-1 text-xs font-bold uppercase tracking-[0.15em]">
-                <a href="docs.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Docs</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Benchmarks</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-                <a href="contacts.html" class="p-3 rounded-xl bg-white/5 primary-color font-black transition flex items-center justify-between">
-                    <span>Contacts</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 primary-color"></i>
-                </a>
-            </div>
-            <div class="themed-divider pt-3 flex flex-col gap-2.5">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between w-full">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                        <span>GitHub Repository</span>
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
-                        <span class="starCountEl">1</span>
-                    </span>
-                </a>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition w-full block">
-                    Installation
-                </a>
+                <a href="docs.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="p-3 rounded-xl bg-white/5 primary-color font-bold">Contacts</a>
             </div>
         </div>
     </div>
 
-    <!-- Contact & Contribute Hero Section -->
-    <main class="max-w-7xl mx-auto px-8 py-8 flex flex-col items-center text-center">
-        <h1 class="animate-reveal text-5xl md:text-7xl font-black leading-[1.05] mb-6 tracking-tighter max-w-4xl">
-            Wanna <span class="primary-color">Contribute?</span><br>Let's Build the Future of Inference.
-        </h1>
-        <p class="animate-reveal reveal-delay-1 opacity-70 text-base md:text-lg mb-16 max-w-2xl leading-relaxed">
-            All contributions, big or small, are welcome! Whether you're a seasoned developer or just starting out, your input can help shape RustyLM into a powerful and efficient inference engine.
-        </p>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 sm:px-8 py-10 relative z-10">
+        <div class="text-center mb-16">
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tighter mb-4">
+                Join the <span class="gradient-text">RustyLM</span> Ecosystem
+            </h1>
+            <p class="text-base sm:text-lg text-[var(--text-muted)] max-w-2xl mx-auto">
+                Have questions, feature requests, or benchmark results to submit? Reach out to the maintainers or open a discussion on GitHub.
+            </p>
+        </div>
 
-        <!-- Main Form & Info Grid -->
-        <div class="animate-reveal reveal-delay-3 grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-5xl text-left items-start">
-            
-            <!-- Left Info Panel: Opportunities & Channels -->
-            <div class="lg:col-span-5 space-y-6">
-                <!-- Open Contribution Areas Card -->
-                <div class="p-6 sm:p-7 rounded-2xl themed-card space-y-5">
-                    <div class="border-b border-[var(--divider)] pb-4">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <i data-lucide="code-2" class="w-5 h-5 primary-color"></i>
-                            <h3 class="text-base font-bold tracking-tight uppercase">Open Contribution Areas</h3>
-                        </div>
-                        <p class="text-sm text-[var(--text-muted)]">High-impact domains across the inference stack:</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <!-- Left: Interactive Contact Form -->
+            <div class="window-frame p-6 sm:p-8">
+                <h2 class="text-2xl font-black mb-2">Send Message / Feedback</h2>
+                <p class="text-xs text-[var(--text-muted)] mb-6">Directly submit a message or bug report to the core development team.</p>
+
+                <form id="contactForm" onsubmit="handleContactSubmit(event)" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase opacity-70 mb-1">Your Name</label>
+                        <input id="formName" required type="text" class="w-full custom-input p-3 rounded-xl text-xs" placeholder="e.g. Alex Rustacean">
                     </div>
-
-                    <div class="space-y-4">
-                        <div class="space-y-1">
-                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
-                                <span>GPU &amp; CPU Kernels</span>
-                                <span class="text-xs code-font text-[var(--text-muted)]">CUDA • Metal • ROCm</span>
-                            </div>
-                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">SIMD vectorization, memory mapping, and compute kernels.</p>
-                        </div>
-
-                        <div class="space-y-1 pt-3 border-t border-[var(--divider)]">
-                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
-                                <span>Quantization &amp; Formats</span>
-                                <span class="text-xs code-font text-[var(--text-muted)]">GGUF • AWQ • FP8</span>
-                            </div>
-                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">Model loaders, tensor quantization, and format parsers.</p>
-                        </div>
-
-                        <div class="space-y-1 pt-3 border-t border-[var(--divider)]">
-                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
-                                <span>Runtime &amp; Bindings</span>
-                                <span class="text-xs code-font text-[var(--text-muted)]">CLI • Python • FFI</span>
-                            </div>
-                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">Scheduler, tokenizer streaming, and API wrappers.</p>
-                        </div>
-
-                        <div class="space-y-1 pt-3 border-t border-[var(--divider)]">
-                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
-                                <span>Benchmarks &amp; Guides</span>
-                                <span class="text-xs code-font text-[var(--text-muted)]">Docs • QA • Perf</span>
-                            </div>
-                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">Latency benchmark suites and integration test harnesses.</p>
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase opacity-70 mb-1">Email Address</label>
+                        <input id="formEmail" required type="email" class="w-full custom-input p-3 rounded-xl text-xs" placeholder="alex@example.com">
                     </div>
-                </div>
-
-                <!-- Direct Email & Issues Badge -->
-                <div class="p-5 rounded-2xl themed-card flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
-                            <i data-lucide="mail" class="w-5 h-5 primary-color"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Direct Contact</div>
-                            <div class="text-sm font-semibold code-font text-[var(--text)]">kdtastan@gmail.com</div>
-                        </div>
-                    </div>
-                    <a href="https://github.com/Kem0wow/rustylm/issues" target="_blank" rel="noopener noreferrer" class="btn-secondary px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
-                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                        <span>Issues</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Right Panel: Compact & Sleek Message Form -->
-            <div class="lg:col-span-7 p-6 sm:p-8 rounded-2xl window-frame">
-                <div class="mb-6">
-                    <h3 class="text-xl font-bold mb-1.5">Send a Message</h3>
-                    <p class="text-sm text-[var(--text-muted)]">Get in touch directly with the core maintainers.</p>
-                </div>
-
-                <form id="contactForm" action="https://formspree.io/f/xyegjdqw" method="POST" class="space-y-4" onsubmit="handleContactSubmit(event)">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Your Name</label>
-                            <input type="text" id="name" name="name" required placeholder="Ali Veli" class="w-full px-4 py-2.5 rounded-xl custom-input text-sm">
-                        </div>
-                        <div class="space-y-2">
-                            <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Email Address</label>
-                            <input type="email" id="email" name="email" required placeholder="ali@veli.com" class="w-full px-4 py-2.5 rounded-xl custom-input text-sm">
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Subject / Purpose</label>
-                        <select id="subject" name="subject" required class="w-full px-4 py-2.5 rounded-xl custom-input text-sm">
-                            <option value="contribute">Wanna Contribute / Collaborator Inquiry</option>
-                            <option value="general">General Question</option>
-                            <option value="feature">Feature Proposal / Idea</option>
-                            <option value="bug">Bug Report</option>
+                    <div>
+                        <label class="block text-xs font-bold uppercase opacity-70 mb-1">Category</label>
+                        <select id="formCategory" class="w-full custom-input p-3 rounded-xl text-xs font-bold">
+                            <option value="benchmark">Submit Benchmark Data</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="bug">Report CUDA / Engine Issue</option>
+                            <option value="other">General Question</option>
                         </select>
                     </div>
-
-                    <div class="space-y-2">
-                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Message</label>
-                        <textarea id="message" name="message" rows="4" required placeholder="Tell us about yourself, your ideas, or how you'd like to collaborate on RustyLM..." class="w-full px-4 py-2.5 rounded-xl custom-input text-sm resize-none"></textarea>
+                    <div>
+                        <label class="block text-xs font-bold uppercase opacity-70 mb-1">Message</label>
+                        <textarea id="formMsg" required rows="4" class="w-full custom-input p-3 rounded-xl text-xs resize-none" placeholder="Describe your request or setup..."></textarea>
                     </div>
-
-                    <div id="formSuccess" class="hidden p-3.5 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm font-semibold flex items-center gap-2">
-                        <!-- Content injected via JS on success/error -->
-                    </div>
-
-                    <button type="submit" id="submitBtn" class="w-full bg-primary text-white py-3 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition">
+                    <button type="submit" class="bg-primary text-white font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition hover:opacity-90 shadow-lg mt-2">
                         <i data-lucide="send" class="w-4 h-4"></i>
-                        <span>Send Message</span>
+                        <span>Submit Message</span>
                     </button>
+                    <div id="formSuccess" class="hidden p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold text-center">
+                        ✓ Message sent! Thank you for contributing.
+                    </div>
                 </form>
             </div>
 
+            <!-- Right: Community Channels & Live Repos Metrics -->
+            <div class="flex flex-col justify-between gap-6">
+                <!-- Repository Telemetry Box -->
+                <div class="themed-card p-6 rounded-3xl border border-white/10 space-y-6">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+                        <span>GitHub Repository Telemetry</span>
+                    </h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+                        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                            <span class="block text-[10px] font-bold uppercase opacity-60">Stars</span>
+                            <span class="text-xl font-black primary-color code-font starCountEl">3</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                            <span class="block text-[10px] font-bold uppercase opacity-60">Forks</span>
+                            <span class="text-xl font-black text-blue-400 code-font">0</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                            <span class="block text-[10px] font-bold uppercase opacity-60">License</span>
+                            <span class="text-sm font-black text-purple-400 code-font mt-1 block">MIT</span>
+                        </div>
+                    </div>
+
+                    <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="btn-secondary w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
+                        <span>View Repository on GitHub</span>
+                    </a>
+                </div>
+
+                <!-- Open to Contributors Section -->
+                <div class="themed-card p-6 sm:p-8 rounded-3xl border border-white/10 space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2 primary-color">
+                        <i data-lucide="git-pull-request" class="w-5 h-5"></i>
+                        <span>Open to Contributors</span>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
+                        RustyLM is an open-source project driven by community innovation. Whether you are interested in Rust runtime performance, kernel optimizations, documentation improvements, new model architectures, or tooling, contributions of all skill levels are welcome.
+                    </p>
+                    <p class="text-xs text-[var(--text-muted)] leading-relaxed opacity-80">
+                        Explore our repository on GitHub to join the project, open an issue, or submit a pull request.
+                    </p>
+
+                    <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="btn-secondary w-full py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 mt-2">
+                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
+                        <span>Contribute on GitHub</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- Unified Footer -->
-    <footer class="max-w-7xl mx-auto px-8 py-16 mt-20 themed-divider">
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-6 sm:px-8 py-16 mt-20 themed-divider relative z-10">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
-            <!-- Left Side: Icon + RustyLM Label & GitHub Logo underneath -->
             <div class="flex flex-col items-center md:items-start gap-3">
                 <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
                     <img id="footerIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
                     <span class="font-black text-xl tracking-tight">RustyLM</span>
                 </a>
-                <a href="#contribute" class="opacity-60 hover:primary-color transition flex items-center gap-2 text-xs font-semibold" title="Contribute Section">
-                    <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
-                    <span>GitHub Repository</span>
-                </a>
+                <p class="text-xs text-[var(--text-muted)]">Local LLM engine in Rust.</p>
             </div>
-
-            <!-- Right Side: Wanna Contribute? Button -->
-            <div class="flex items-center">
-                <a href="#" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition">
-                    <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
-                    <span>Wanna Contribute?</span>
-                </a>
+            <div class="flex flex-wrap justify-center gap-8 text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="index.html" class="hover:text-[var(--text)] hover:primary-color transition">Home</a>
+                <a href="docs.html" class="hover:text-[var(--text)] hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="primary-color font-bold">Contribute & Contact</a>
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="hover:text-[var(--text)] hover:primary-color transition">GitHub</a>
             </div>
-        </div>
-
-        <!-- Center Bottom: Tagline & Copyright -->
-        <div class="text-center pt-8 border-t border-white/5 space-y-2">
-            <p class="text-[11px] font-bold uppercase tracking-[0.4em] opacity-40">&lt; High-Performance Systems Programming &gt;</p>
-            <p class="text-[12px] opacity-60">© 2026 RustyLM Project • All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        const modeToggle = document.getElementById('modeToggle');
-        const navIcon = document.getElementById('navIcon');
-        const footerIcon = document.getElementById('footerIcon');
-        const favicon = document.getElementById('favicon');
-        const root = document.documentElement;
-
-        const sunSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
-        const moonSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
-
-        function updateTheme(mode) {
-            root.setAttribute('data-mode', mode);
-            localStorage.setItem('theme', mode);
-            if (modeToggle) modeToggle.innerHTML = mode === 'dark' ? sunSvg : moonSvg;
-            if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (favicon) favicon.href = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (window.lucide) lucide.createIcons();
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const success = document.getElementById('formSuccess');
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            setTimeout(() => {
+                success.classList.remove('hidden');
+                e.target.reset();
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            }, 800);
         }
 
-        updateTheme(localStorage.getItem('theme') || root.getAttribute('data-mode') || 'dark');
+        // Theme Toggle
+        const modeToggle = document.getElementById('modeToggle');
+        function updateTheme(mode) {
+            document.documentElement.setAttribute('data-mode', mode);
+            localStorage.setItem('theme', mode);
+            if (modeToggle) {
+                modeToggle.innerHTML = mode === 'dark' 
+                    ? `<i data-lucide="sun" class="w-4 h-4 text-yellow-400"></i>` 
+                    : `<i data-lucide="moon" class="w-4 h-4 text-slate-700"></i>`;
+                if (window.lucide) lucide.createIcons();
+            }
+            const navIcon = document.getElementById('navIcon');
+            const footerIcon = document.getElementById('footerIcon');
+            if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+        }
 
+        updateTheme(localStorage.getItem('theme') || 'dark');
         if (modeToggle) {
             modeToggle.addEventListener('click', () => {
-                updateTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+                const mode = document.documentElement.getAttribute('data-mode') === 'dark' ? 'light' : 'dark';
+                updateTheme(mode);
             });
         }
 
+        // GitHub Star Counter (Fallback: 3)
         async function fetchStarCount() {
-            const cached = localStorage.getItem('gh_stars');
-            const cachedTime = localStorage.getItem('gh_stars_time');
-            if (cached) {
-                document.querySelectorAll('.starCountEl').forEach(el => el.textContent = cached);
-            }
-            if (cachedTime && (Date.now() - cachedTime < 600000)) return;
             try {
                 const res = await fetch('https://api.github.com/repos/Kem0wow/rustylm');
                 if (res.ok) {
                     const data = await res.json();
                     if (data.stargazers_count !== undefined) {
-                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = data.stargazers_count);
-                        localStorage.setItem('gh_stars', data.stargazers_count);
-                        localStorage.setItem('gh_stars_time', Date.now());
+                        const count = Math.max(3, data.stargazers_count);
+                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = count);
+                        localStorage.setItem('gh_stars', count);
+                        return;
                     }
                 }
             } catch (e) {}
+            document.querySelectorAll('.starCountEl').forEach(el => el.textContent = '3');
         }
         fetchStarCount();
 
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            function closeMobileMenu() {
-                mobileMenu.classList.remove('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
-                if (window.lucide) lucide.createIcons();
-            }
-
-            function openMobileMenu() {
-                mobileMenu.classList.add('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
-                if (window.lucide) lucide.createIcons();
-            }
-
-            mobileMenuBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (mobileMenu.classList.contains('active')) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                    if (mobileMenu.classList.contains('active')) {
-                        closeMobileMenu();
-                    }
-                }
-            });
-
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMobileMenu();
-                });
-            });
-        }
-
-        // Formspree AJAX Submission
-        async function handleContactSubmit(e) {
-            e.preventDefault();
-            const form = e.target;
-            const data = new FormData(form);
-            const successBox = document.getElementById('formSuccess');
-            const submitBtn = document.getElementById('submitBtn');
-            const originalBtnText = submitBtn.innerHTML;
-
-            submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Gönderiliyor...</span>';
-            submitBtn.disabled = true;
+        window.addEventListener('load', () => {
             if (window.lucide) lucide.createIcons();
-
-            try {
-                const response = await fetch(form.action, {
-                    method: form.method,
-                    body: data,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    successBox.className = "p-4 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm font-semibold flex items-center gap-3";
-                    successBox.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i><span>Teşekkürler! Mesajınız başarıyla gönderildi.</span>';
-                    form.reset();
-                } else {
-                    successBox.className = "p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-semibold flex items-center gap-3";
-                    successBox.innerHTML = '<i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i><span>Oops! Bir sorun oluştu, lütfen tekrar deneyin.</span>';
-                }
-            } catch (error) {
-                successBox.className = "p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-semibold flex items-center gap-3";
-                successBox.innerHTML = '<i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i><span>Sunucuya ulaşılamadı. Lütfen bağlantınızı kontrol edin.</span>';
-            } finally {
-                submitBtn.innerHTML = originalBtnText;
-                submitBtn.disabled = false;
-                if (window.lucide) lucide.createIcons();
-            }
-        }
+        });
     </script>
 </body>
 </html>

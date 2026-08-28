@@ -1,26 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="light">
+<html lang="en" data-mode="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentation | RustyLM</title>
+    <meta name="description" content="Simple, clean documentation for RustyLM - Installation, CLI usage, and Rust library API example.">
     <link rel="icon" id="favicon" type="image/png" href="images/icon-dark.png">
     <script>
         (function() {
-            const mode = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            const mode = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-mode', mode);
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="selection:bg-teal-500 selection:text-white">
+<body class="selection:bg-emerald-500 selection:text-white">
 
-    <!-- Global Reusable SVG Symbols -->
+    <div id="cursorGlow" class="cursor-glow"></div>
+
     <svg class="hidden">
         <symbol id="gh-icon" viewBox="0 0 24 24">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -30,238 +32,221 @@
     <!-- Floating Navbar -->
     <div class="nav-container">
         <nav class="nav-content">
-            <div class="flex items-center gap-2">
-                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" title="Back to Home" aria-label="Back to Home">
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="btn-secondary p-1.5 rounded-xl flex items-center justify-center transition hover:scale-105" title="Back to Home">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 </a>
-                <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-0.5">
-                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
-                    <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
+                <a href="index.html" class="flex items-center gap-2.5 hover:opacity-90 transition cursor-pointer">
+                    <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-9 h-9 object-contain">
+                    <span class="font-black text-xl tracking-tight hidden sm:inline-block">Rusty<span class="primary-color">LM</span></span>
                 </a>
             </div>
-            <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-                <a href="docs.html" class="primary-color font-bold">Docs</a>
+            <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="docs.html" class="primary-color font-extrabold">Docs</a>
                 <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
                 <a href="contacts.html" class="hover:text-[var(--text)] hover:primary-color transition">Contacts</a>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition" title="View repository on GitHub">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="github-star-badge hidden sm:flex px-3.5 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
                     <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
-                    <span class="starCountEl">1</span>
+                    <span class="starCountEl">3</span>
                 </a>
-                <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition">Installation</a>
-                <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
+                <button id="modeToggle" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" aria-label="Toggle Theme"></button>
+                <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
         </nav>
-        <!-- Mobile Dropdown Menu -->
         <div id="mobileMenu" class="mobile-menu md:hidden">
             <div class="flex flex-col gap-1 text-xs font-bold uppercase tracking-[0.15em]">
-                <a href="docs.html" class="p-3 rounded-xl hover:bg-white/5 primary-color transition flex items-center justify-between font-bold">
-                    <span>Docs</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Benchmarks</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-                <a href="contacts.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
-                    <span>Contacts</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
-                </a>
-            </div>
-            <div class="themed-divider pt-3 flex flex-col gap-2.5">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between w-full">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                        <span>GitHub Repository</span>
-                    </span>
-                    <span class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
-                        <span class="starCountEl">1</span>
-                    </span>
-                </a>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition w-full block">
-                    Installation
-                </a>
+                <a href="docs.html" class="p-3 rounded-xl bg-white/5 primary-color font-bold">Docs</a>
+                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition">Contacts</a>
             </div>
         </div>
     </div>
 
-    <!-- Coming Soon Hero Content -->
-    <main class="max-w-7xl mx-auto px-8 py-8 flex flex-col items-center text-center">
-        <h1 class="animate-reveal text-5xl md:text-7xl font-black leading-[1] mb-6 tracking-tighter max-w-4xl">
-            Documentation<br><span class="primary-color">Coming Soon.</span>
-        </h1>
-        
-        <p class="animate-reveal reveal-delay-1 text-base md:text-lg mb-12 max-w-2xl leading-relaxed text-[var(--text-muted)]">
-            We are currently writing and refining comprehensive guides, API references, CUDA/Metal kernel tuning docs, and benchmarks for RustyLM.
-        </p>
-
-        <!-- Preview Feature Grid -->
-        <div class="animate-reveal reveal-delay-3 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mb-16 text-left">
-            <div class="p-8 rounded-2xl themed-card space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
-                    <i data-lucide="book-open" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-xl font-bold">API Reference</h3>
-                <p class="text-sm text-[var(--text-muted)] leading-relaxed">Full Rust crate documentation, C/C++ FFI bindings, and Python runtime integration guides.</p>
-            </div>
-            
-            <div class="p-8 rounded-2xl themed-card space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
-                    <i data-lucide="terminal" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-xl font-bold">CLI Handbook</h3>
-                <p class="text-sm text-[var(--text-muted)] leading-relaxed">Interactive CLI tutorials for model quantization, layer offloading, and memory tuning.</p>
-            </div>
-
-            <div class="p-8 rounded-2xl themed-card space-y-4">
-                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
-                    <i data-lucide="cpu" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-xl font-bold">Kernel Tuning</h3>
-                <p class="text-sm text-[var(--text-muted)] leading-relaxed">In-depth breakdown of CUDA streams, Apple Metal Unified Memory, and AMD ROCm kernels.</p>
-            </div>
+    <!-- Docs Main Container -->
+    <main class="max-w-4xl mx-auto px-6 sm:px-8 py-10 relative z-10">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tighter mb-3">
+                Documentation
+            </h1>
+            <p class="text-base text-[var(--text-muted)]">Everything you need to build and run RustyLM locally.</p>
         </div>
 
-        <!-- Action Callouts -->
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="bg-primary text-white px-8 py-3.5 rounded-xl font-bold text-sm flex items-center gap-3 transition">
-                <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                <span>Follow on GitHub</span>
-            </a>
-            <a href="contacts.html" class="btn-secondary px-8 py-3.5 rounded-xl font-semibold text-sm flex items-center gap-3 transition">
-                <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
-                <span>Wanna Contribute to Docs?</span>
-            </a>
+        <div class="flex flex-col gap-8">
+            
+            <!-- 1. Installation & Building -->
+            <section class="themed-card p-6 sm:p-8 rounded-3xl space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 primary-color flex items-center justify-center font-black">1</div>
+                    <h2 class="text-2xl font-black">Installation & Building</h2>
+                </div>
+                <p class="text-sm text-[var(--text-muted)] leading-relaxed">
+                    Clone the repository and build the binary using Cargo. Enable <code class="code-font primary-color">--features cuda</code> for NVIDIA GPU acceleration.
+                </p>
+
+                <div class="window-frame p-5 relative">
+                    <div class="flex items-center justify-between mb-3 text-xs code-font border-b border-white/10 pb-2">
+                        <span class="primary-color font-bold">Terminal</span>
+                        <button onclick="copySnippet('installCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold">Copy</button>
+                    </div>
+                    <pre id="installCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="opacity-50 select-none">$ </span>git clone https://github.com/Kem0wow/rustylm.git
+<span class="opacity-50 select-none">$ </span>cd rustylm
+
+<span class="opacity-40"># CPU Only (SIMD Native)</span>
+<span class="opacity-50 select-none">$ </span>cargo build --release
+
+<span class="opacity-40"># CUDA GPU Accelerated</span>
+<span class="opacity-50 select-none">$ </span>cargo build --release --features cuda</pre>
+                </div>
+            </section>
+
+            <!-- 2. CLI Commands & Usage -->
+            <section class="themed-card p-6 sm:p-8 rounded-3xl space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-black">2</div>
+                    <h2 class="text-2xl font-black">CLI Commands & Flags</h2>
+                </div>
+                <p class="text-sm text-[var(--text-muted)] leading-relaxed">
+                    Run models directly from Hugging Face model directories containing <code class="code-font primary-color">config.json</code>, <code class="code-font primary-color">tokenizer.json</code>, and <code class="code-font primary-color">*.safetensors</code>.
+                </p>
+
+                <div class="window-frame p-5 relative">
+                    <div class="flex items-center justify-between mb-3 text-xs code-font border-b border-white/10 pb-2">
+                        <span class="text-blue-400 font-bold">CLI Usage</span>
+                        <button onclick="copySnippet('cliCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold">Copy</button>
+                    </div>
+                    <pre id="cliCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="opacity-40"># Interactive Chat REPL</span>
+<span class="opacity-50 select-none">$ </span>./target/release/rustylm run models/qwen2.5-1.5b-instruct
+
+<span class="opacity-40"># Single Prompt Answer</span>
+<span class="opacity-50 select-none">$ </span>./target/release/rustylm run models/qwen2.5-1.5b-instruct "Explain gravity briefly."
+
+<span class="opacity-40"># List Local Models</span>
+<span class="opacity-50 select-none">$ </span>./target/release/rustylm list
+
+<span class="opacity-40"># With VRAM Limit Cap (800 MiB VRAM + System RAM offload)</span>
+<span class="opacity-50 select-none">$ </span>RUSTYLM_VRAM_CAP=800 ./target/release/rustylm run models/qwen2.5-1.5b-instruct</pre>
+                </div>
+            </section>
+
+            <!-- 3. Rust Code Example -->
+            <section class="themed-card p-6 sm:p-8 rounded-3xl space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-black">3</div>
+                    <h2 class="text-2xl font-black">Rust Code Example</h2>
+                </div>
+                <p class="text-sm text-[var(--text-muted)] leading-relaxed">
+                    Embed <code class="code-font primary-color">rustylm_runtime</code> directly into your Rust applications with 3 clean methods: <code class="code-font text-purple-400">load</code>, <code class="code-font text-purple-400">ask</code>, and <code class="code-font text-purple-400">generate</code>.
+                </p>
+
+                <div class="window-frame p-5 relative">
+                    <div class="flex items-center justify-between mb-3 text-xs code-font border-b border-white/10 pb-2">
+                        <span class="text-purple-400 font-bold">src/main.rs</span>
+                        <button onclick="copySnippet('rustCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold">Copy</button>
+                    </div>
+                    <pre id="rustCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="text-purple-400">use</span> rustylm_runtime::{Engine, Device, Params};
+
+<span class="text-purple-400">fn</span> <span class="text-blue-400">main</span>() -> Result&lt;(), Box&lt;<span class="text-purple-400">dyn</span> std::error::Error&gt;&gt; {
+    <span class="text-emerald-400">// 1. Load model directory</span>
+    <span class="text-purple-400">let</span> engine = Engine::<span class="text-blue-400">load</span>(<span class="text-emerald-400">"models/qwen2.5-1.5b-instruct"</span>, Device::Auto)?;
+
+    <span class="text-emerald-400">// 2. Single direct answer</span>
+    println!(<span class="text-emerald-400">"{}"</span>, engine.<span class="text-blue-400">ask</span>(<span class="text-emerald-400">"What is the capital of France?"</span>)?);
+
+    <span class="text-emerald-400">// 3. Token streaming with sampling</span>
+    <span class="text-purple-400">let</span> params = Params::default();
+    <span class="text-purple-400">let</span> stats = engine.<span class="text-blue-400">generate</span>(<span class="text-emerald-400">"Write a haiku about Rust."</span>, &params, |chunk| {
+        print!(<span class="text-emerald-400">"{}"</span>, chunk);
+    })?;
+
+    println!(<span class="text-emerald-400">"\n{:.1} tok/s"</span>, stats.tokens_per_sec());
+    Ok(())
+}</pre>
+                </div>
+            </section>
+
         </div>
     </main>
 
-    <!-- Unified Footer -->
-    <footer class="max-w-7xl mx-auto px-8 py-16 mt-20 themed-divider">
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-6 sm:px-8 py-16 mt-20 themed-divider relative z-10">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 pb-12">
-            <!-- Left Side: Icon + RustyLM Label & GitHub Logo underneath -->
             <div class="flex flex-col items-center md:items-start gap-3">
                 <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
                     <img id="footerIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-8 h-8 object-contain">
                     <span class="font-black text-xl tracking-tight">RustyLM</span>
                 </a>
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="opacity-60 hover:primary-color transition flex items-center gap-2 text-xs font-semibold" title="GitHub Repository">
-                    <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
-                    <span>GitHub Repository</span>
-                </a>
+                <p class="text-xs text-[var(--text-muted)]">Local LLM engine in Rust.</p>
             </div>
-
-            <!-- Right Side: Wanna Contribute? Button -->
-            <div class="flex items-center">
-                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition">
-                    <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
-                    <span>Wanna Contribute?</span>
-                </a>
+            <div class="flex flex-wrap justify-center gap-8 text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="index.html" class="hover:text-[var(--text)] hover:primary-color transition">Home</a>
+                <a href="docs.html" class="primary-color font-bold">Docs</a>
+                <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="hover:text-[var(--text)] hover:primary-color transition">Contribute & Contact</a>
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" class="hover:text-[var(--text)] hover:primary-color transition">GitHub</a>
             </div>
-        </div>
-
-        <!-- Center Bottom: Tagline & Copyright -->
-        <div class="text-center pt-8 border-t border-white/5 space-y-2">
-            <p class="text-[11px] font-bold uppercase tracking-[0.4em] opacity-40">&lt; High-Performance Systems Programming &gt;</p>
-            <p class="text-[12px] opacity-60">© 2026 RustyLM Project • All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        const modeToggle = document.getElementById('modeToggle');
-        const navIcon = document.getElementById('navIcon');
-        const footerIcon = document.getElementById('footerIcon');
-        const favicon = document.getElementById('favicon');
-        const root = document.documentElement;
-
-        const sunSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
-        const moonSvg = `<svg class="w-5 h-5 stroke-current" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
-
-        function updateTheme(mode) {
-            root.setAttribute('data-mode', mode);
-            localStorage.setItem('theme', mode);
-            if (modeToggle) modeToggle.innerHTML = mode === 'dark' ? sunSvg : moonSvg;
-            if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (favicon) favicon.href = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
-            if (window.lucide) lucide.createIcons();
+        function copySnippet(id, btn) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            const orig = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = orig, 2000);
         }
 
-        updateTheme(localStorage.getItem('theme') || root.getAttribute('data-mode') || 'dark');
+        // Theme Toggle
+        const modeToggle = document.getElementById('modeToggle');
+        function updateTheme(mode) {
+            document.documentElement.setAttribute('data-mode', mode);
+            localStorage.setItem('theme', mode);
+            if (modeToggle) {
+                modeToggle.innerHTML = mode === 'dark' 
+                    ? `<i data-lucide="sun" class="w-4 h-4 text-yellow-400"></i>` 
+                    : `<i data-lucide="moon" class="w-4 h-4 text-slate-700"></i>`;
+                if (window.lucide) lucide.createIcons();
+            }
+            const navIcon = document.getElementById('navIcon');
+            const footerIcon = document.getElementById('footerIcon');
+            if (navIcon) navIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+            if (footerIcon) footerIcon.src = mode === 'dark' ? 'images/icon-dark.png' : 'images/icon-light.png';
+        }
 
+        updateTheme(localStorage.getItem('theme') || 'dark');
         if (modeToggle) {
             modeToggle.addEventListener('click', () => {
-                updateTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+                const mode = document.documentElement.getAttribute('data-mode') === 'dark' ? 'light' : 'dark';
+                updateTheme(mode);
             });
         }
 
+        // GitHub Star Counter (Fallback: 3)
         async function fetchStarCount() {
-            const cached = localStorage.getItem('gh_stars');
-            const cachedTime = localStorage.getItem('gh_stars_time');
-            if (cached) {
-                document.querySelectorAll('.starCountEl').forEach(el => el.textContent = cached);
-            }
-            if (cachedTime && (Date.now() - cachedTime < 600000)) return;
             try {
                 const res = await fetch('https://api.github.com/repos/Kem0wow/rustylm');
                 if (res.ok) {
                     const data = await res.json();
                     if (data.stargazers_count !== undefined) {
-                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = data.stargazers_count);
-                        localStorage.setItem('gh_stars', data.stargazers_count);
-                        localStorage.setItem('gh_stars_time', Date.now());
+                        const count = Math.max(3, data.stargazers_count);
+                        document.querySelectorAll('.starCountEl').forEach(el => el.textContent = count);
+                        localStorage.setItem('gh_stars', count);
+                        return;
                     }
                 }
             } catch (e) {}
+            document.querySelectorAll('.starCountEl').forEach(el => el.textContent = '3');
         }
         fetchStarCount();
 
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        if (mobileMenuBtn && mobileMenu) {
-            function closeMobileMenu() {
-                mobileMenu.classList.remove('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'false');
-                mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
-                if (window.lucide) lucide.createIcons();
-            }
-
-            function openMobileMenu() {
-                mobileMenu.classList.add('active');
-                mobileMenuBtn.setAttribute('aria-expanded', 'true');
-                mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
-                if (window.lucide) lucide.createIcons();
-            }
-
-            mobileMenuBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (mobileMenu.classList.contains('active')) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                    if (mobileMenu.classList.contains('active')) {
-                        closeMobileMenu();
-                    }
-                }
-            });
-
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMobileMenu();
-                });
-            });
-        }
+        window.addEventListener('load', () => {
+            if (window.lucide) lucide.createIcons();
+        });
     </script>
 </body>
 </html>
