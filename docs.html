@@ -91,7 +91,10 @@
                 <div class="window-frame p-5 relative">
                     <div class="flex items-center justify-between mb-3 text-xs code-font border-b border-white/10 pb-2">
                         <span class="primary-color font-bold">Terminal</span>
-                        <button onclick="copySnippet('installCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold">Copy</button>
+                        <button onclick="copySnippet('installCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>Copy</span>
+                        </button>
                     </div>
                     <pre id="installCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="opacity-50 select-none">$ </span>git clone https://github.com/Kem0wow/rustylm.git
 <span class="opacity-50 select-none">$ </span>cd rustylm
@@ -117,7 +120,10 @@
                 <div class="window-frame p-5 relative">
                     <div class="flex items-center justify-between mb-3 text-xs code-font border-b border-white/10 pb-2">
                         <span class="text-blue-400 font-bold">CLI Usage</span>
-                        <button onclick="copySnippet('cliCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold">Copy</button>
+                        <button onclick="copySnippet('cliCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>Copy</span>
+                        </button>
                     </div>
                     <pre id="cliCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="opacity-40"># Interactive Chat REPL</span>
 <span class="opacity-50 select-none">$ </span>./target/release/rustylm run models/qwen2.5-1.5b-instruct
@@ -140,15 +146,18 @@
                     <h2 class="text-2xl font-black">Rust Code Example</h2>
                 </div>
                 <p class="text-sm text-[var(--text-muted)] leading-relaxed">
-                    Embed <code class="code-font primary-color">rustylm_runtime</code> directly into your Rust applications with 3 clean methods: <code class="code-font text-purple-400">load</code>, <code class="code-font text-purple-400">ask</code>, and <code class="code-font text-purple-400">generate</code>.
+                    Embed <code class="code-font primary-color">rustylm</code> directly into your Rust applications with 3 clean methods: <code class="code-font text-purple-400">load</code>, <code class="code-font text-purple-400">ask</code>, and <code class="code-font text-purple-400">generate</code>.
                 </p>
 
                 <div class="window-frame p-5 relative">
                     <div class="flex items-center justify-between mb-3 text-xs code-font border-b border-white/10 pb-2">
                         <span class="text-purple-400 font-bold">src/main.rs</span>
-                        <button onclick="copySnippet('rustCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold">Copy</button>
+                        <button onclick="copySnippet('rustCode', this)" class="btn-secondary px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>Copy</span>
+                        </button>
                     </div>
-                    <pre id="rustCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="text-purple-400">use</span> rustylm_runtime::{Engine, Device, Params};
+                    <pre id="rustCode" class="code-font text-xs leading-relaxed text-[var(--text)] overflow-x-auto"><span class="text-purple-400">use</span> rustylm::{Engine, Device, Params};
 
 <span class="text-purple-400">fn</span> <span class="text-blue-400">main</span>() -> Result&lt;(), Box&lt;<span class="text-purple-400">dyn</span> std::error::Error&gt;&gt; {
     <span class="text-emerald-400">// 1. Load model directory</span>
@@ -193,12 +202,27 @@
     </footer>
 
     <script>
+        // Cursor Light Follow
+        const cursorGlow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            if (cursorGlow) {
+                cursorGlow.style.left = `${e.clientX}px`;
+                cursorGlow.style.top = `${e.clientY}px`;
+            }
+        });
+
+        // Copy code snippet helper
         function copySnippet(id, btn) {
-            const text = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(text);
-            const orig = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => btn.textContent = orig, 2000);
+            const el = document.getElementById(id);
+            if (!el) return;
+            navigator.clipboard.writeText(el.innerText);
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span class="text-emerald-400">Copied!</span>`;
+            if (window.lucide) lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                if (window.lucide) lucide.createIcons();
+            }, 2000);
         }
 
         // Theme Toggle
@@ -223,6 +247,24 @@
             modeToggle.addEventListener('click', () => {
                 const mode = document.documentElement.getAttribute('data-mode') === 'dark' ? 'light' : 'dark';
                 updateTheme(mode);
+            });
+        }
+
+        // Mobile Menu Controls
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isActive = mobileMenu.classList.contains('active');
+                if (isActive) {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.innerHTML = `<i data-lucide="menu" class="w-5 h-5"></i>`;
+                } else {
+                    mobileMenu.classList.add('active');
+                    mobileMenuBtn.innerHTML = `<i data-lucide="x" class="w-5 h-5"></i>`;
+                }
+                if (window.lucide) lucide.createIcons();
             });
         }
 
