@@ -74,13 +74,18 @@ fn cmd_run(mut args: impl Iterator<Item = String>) -> anyhow::Result<()> {
         question = Some(positional.join(" "));
     }
 
-    let dir = resolve_model_dir(model_arg.as_deref());
+    let Some(model_name) = model_arg else {
+        anyhow::bail!(
+            "missing model name. Usage: rustylm run <model> [prompt]\nRun 'rustylm list' to see available models."
+        );
+    };
+
+    let dir = resolve_model_dir(&model_name);
     if !dir.exists() || !dir.join("config.json").exists() {
-        if let Some(m) = model_arg {
-            anyhow::bail!("model not found: {m} (checked {})", dir.display());
-        } else {
-            anyhow::bail!("no model specified. Usage: rustylm run <model> [prompt]");
-        }
+        anyhow::bail!(
+            "model not found: '{model_name}' (checked {})\nRun 'rustylm list' to see available models.",
+            dir.display()
+        );
     }
 
     print!("loading {} ... ", dir.display());
@@ -214,60 +219,25 @@ fn help_run() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn resolve_model_dir(arg: Option<&str>) -> PathBuf {
+fn resolve_model_dir(raw: &str) -> PathBuf {
     let home = std::env::var("HOME").ok().map(PathBuf::from);
+    let path = expand_tilde(raw, home.as_ref());
+    if path.exists() {
+        return path;
+    }
     let candidates = [
         home.as_ref().map(|h| h.join("Models")),
         home.as_ref().map(|h| h.join("models")),
         Some(PathBuf::from("./models")),
         Some(PathBuf::from("./Models")),
     ];
-
-    match arg {
-        Some(raw) => {
-            let path = expand_tilde(raw, home.as_ref());
-            if path.exists() {
-                return path;
-            }
-            for base in candidates.iter().flatten() {
-                let inside = base.join(raw);
-                if inside.exists() {
-                    return inside;
-                }
-            }
-            if !path.is_absolute() && !raw.starts_with('.') && !raw.starts_with('~') {
-                candidates
-                    .iter()
-                    .flatten()
-                    .next()
-                    .cloned()
-                    .unwrap_or_else(|| PathBuf::from("./models"))
-                    .join(raw)
-            } else {
-                path
-            }
-        }
-        None => {
-            for base in candidates.iter().flatten() {
-                if base.join("config.json").exists() {
-                    return base.clone();
-                }
-                if let Ok(entries) = std::fs::read_dir(base) {
-                    let mut subdirs = Vec::new();
-                    for entry in entries.flatten() {
-                        let p = entry.path();
-                        if p.is_dir() && p.join("config.json").exists() {
-                            subdirs.push(p);
-                        }
-                    }
-                    if subdirs.len() == 1 {
-                        return subdirs.remove(0);
-                    }
-                }
-            }
-            PathBuf::from("./models")
+    for base in candidates.iter().flatten() {
+        let inside = base.join(raw);
+        if inside.exists() {
+            return inside;
         }
     }
+    path
 }
 
 fn expand_tilde(raw: &str, home: Option<&PathBuf>) -> PathBuf {

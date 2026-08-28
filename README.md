@@ -18,22 +18,22 @@ cargo build --release --features cuda  # CPU + CUDA
 
 ### Commands
 
-| command | meaning |
-| --- | --- |
+| command                  | meaning                                         |
+| ------------------------ | ----------------------------------------------- |
 | `run <model> [prompt]` | Run a model (interactive REPL or single prompt) |
-| `list`, `ls` | List available local models |
-| `help` | Help about any command |
+| `list`, `ls`         | List available local models                     |
+| `help`                 | Help about any command                          |
 
 ### Flags (for `run`)
 
-| flag | meaning |
-| --- | --- |
-| `-p, --prompt TEXT` | answer once and exit |
-| `-t, --temp F` | sampling temperature, `0` for greedy (default 0.7) |
-| `-n, --max-tokens N` | generation limit (default 512) |
-| `-d, --device DEV` | device backend (`auto`, `cuda`, `cpu`) |
-| `--cuda` / `--cpu` | force a backend (default: auto) |
-| `RUSTYLM_VRAM_MB` | cap how much VRAM the weights may take |
+| flag                   | meaning                                             |
+| ---------------------- | --------------------------------------------------- |
+| `-p, --prompt TEXT`  | answer once and exit                                |
+| `-t, --temp F`       | sampling temperature,`0` for greedy (default 0.7) |
+| `-n, --max-tokens N` | generation limit (default 512)                      |
+| `-d, --device DEV`   | device backend (`auto`, `cuda`, `cpu`)        |
+| `--cuda` / `--cpu` | force a backend (default: auto)                     |
+| `RUSTYLM_VRAM_CAP`   | cap how much VRAM the weights may take (in MiB)     |
 
 ## Library API
 
@@ -57,9 +57,9 @@ Measured on a GTX 1650 (4 GB) + i5-10300H, Qwen2.5-1.5B-Instruct:
 
 | backend                     | tokens/s |
 | --------------------------- | -------- |
-| CPU only                    | 10.4     |
+| CPU only                    | ~8       |
 | CUDA + CPU                  | ~39      |
-| CUDA + CPU, 800 MB VRAM cap | 15.5     |
+| CUDA + CPU, 800 MB VRAM cap | ~12      |
 
 ## Supported models
 

@@ -178,7 +178,8 @@ impl Engine {
     fn offload(&mut self) -> Result<usize> {
         use rustylm_backend::cuda::Gpu;
         let gpu = Gpu::new(0)?;
-        let mut budget = std::env::var("RUSTYLM_VRAM_MB")
+        let mut budget = std::env::var("RUSTYLM_VRAM_CAP")
+            .or_else(|_| std::env::var("RUSTYLM_VRAM_MB"))
             .ok()
             .and_then(|v| v.parse::<usize>().ok())
             .map_or_else(|| Gpu::free_bytes().saturating_sub(VRAM_RESERVE), |mb| mb << 20);
