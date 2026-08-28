@@ -12,7 +12,9 @@
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -29,7 +31,7 @@
     <div class="nav-container">
         <nav class="nav-content">
             <div class="flex items-center gap-2">
-                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center hover:scale-105 transition" title="Back to Home" aria-label="Back to Home">
+                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" title="Back to Home" aria-label="Back to Home">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 </a>
                 <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-0.5">
@@ -43,13 +45,13 @@
                 <a href="contacts.html" class="primary-color font-extrabold transition">Contacts</a>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition" title="View repository on GitHub">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                    <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
                     <span class="starCountEl">1</span>
                 </a>
                 <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition">Installation</a>
                 <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
@@ -78,11 +80,11 @@
                         <span>GitHub Repository</span>
                     </span>
                     <span class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
                         <span class="starCountEl">1</span>
                     </span>
                 </a>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition shadow-sm w-full block">
+                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition w-full block">
                     Installation
                 </a>
             </div>
@@ -91,116 +93,103 @@
 
     <!-- Contact & Contribute Hero Section -->
     <main class="max-w-7xl mx-auto px-8 py-8 flex flex-col items-center text-center">
-        <div class="inline-block px-4 py-1.5 bg-teal-500/10 primary-color border border-teal-500/20 rounded-full text-xs font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
-            <i data-lucide="git-pull-request" class="w-4 h-4"></i>
-            <span>Collaborators & Open-Source Contributors Welcome</span>
-        </div>
-        <h1 class="text-5xl md:text-7xl font-black leading-[1.05] mb-6 tracking-tighter max-w-4xl">
+        <h1 class="animate-reveal text-5xl md:text-7xl font-black leading-[1.05] mb-6 tracking-tighter max-w-4xl">
             Wanna <span class="primary-color">Contribute?</span><br>Let's Build the Future of Inference.
         </h1>
-        <p class="opacity-60 text-lg md:text-xl mb-16 max-w-2xl leading-relaxed">
+        <p class="animate-reveal reveal-delay-1 opacity-70 text-base md:text-lg mb-16 max-w-2xl leading-relaxed">
             All contributions, big or small, are welcome! Whether you're a seasoned developer or just starting out, your input can help shape RustyLM into a powerful and efficient inference engine.
         </p>
 
         <!-- Main Form & Info Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full max-w-6xl text-left">
+        <div class="animate-reveal reveal-delay-3 grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-5xl text-left items-start">
             
             <!-- Left Info Panel: Opportunities & Channels -->
-            <div class="lg:col-span-5 flex flex-col justify-between gap-8">
-                <div class="space-y-8">
-                    <div class="p-8 rounded-[28px] themed-card space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center mb-2">
-                            <i data-lucide="code-2" class="w-6 h-6"></i>
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Open Contribution Areas Card -->
+                <div class="p-6 sm:p-7 rounded-2xl themed-card space-y-5">
+                    <div class="border-b border-[var(--divider)] pb-4">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <i data-lucide="code-2" class="w-5 h-5 primary-color"></i>
+                            <h3 class="text-base font-bold tracking-tight uppercase">Open Contribution Areas</h3>
                         </div>
-                        <h3 class="text-xl font-bold">Why Collaborate?</h3>
-                        <p class="text-sm opacity-60 leading-relaxed">
-                            RustyLM is an open-source, high-performance inference optimization library. We are looking for passionate developers skilled in Rust, C++/CUDA, SIMD optimizations, and machine learning runtime architecture or just passionate to learn it :)
-                        </p>
+                        <p class="text-sm text-[var(--text-muted)]">High-impact domains across the inference stack:</p>
                     </div>
 
-                    <div class="p-8 rounded-[28px] themed-card space-y-6">
-                        <h4 class="text-sm font-bold uppercase tracking-widest primary-color">
-                            Open Contribution Areas
-                        </h4>
-                        <ul class="space-y-3 text-sm opacity-80">
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="cpu" class="w-4 h-4 primary-color"></i>
-                                <span>Performance Kernels -> CPU, CUDA, ROCm, Apple Silicon</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="layers-3" class="w-4 h-4 primary-color"></i>
-                                <span>Quantization -> GGUF, AWQ, FP8 & new formats</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="boxes" class="w-4 h-4 primary-color"></i>
-                                <span>Model Support -> Architectures, tokenizers & loaders</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="code-2" class="w-4 h-4 primary-color"></i>
-                                <span>Runtime & Developer Tools -> CLI, Python API & tooling</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="globe" class="w-4 h-4 primary-color"></i>
-                                <span>Web Development -> Playground, monitoring & UI</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="bar-chart-3" class="w-4 h-4 primary-color"></i>
-                                <span>Benchmarks -> Models, hardware & inference performance</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="book-open" class="w-4 h-4 primary-color"></i>
-                                <span>Documentation & Examples</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="bug" class="w-4 h-4 primary-color"></i>
-                                <span>Testing & Bug Fixes</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <i data-lucide="help-circle" class="w-4 h-4 primary-color"></i>
-                                <span>anything helps basically</span>
-                            </li>
-                        </ul>
+                    <div class="space-y-4">
+                        <div class="space-y-1">
+                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
+                                <span>GPU &amp; CPU Kernels</span>
+                                <span class="text-xs code-font text-[var(--text-muted)]">CUDA • Metal • ROCm</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">SIMD vectorization, memory mapping, and compute kernels.</p>
+                        </div>
+
+                        <div class="space-y-1 pt-3 border-t border-[var(--divider)]">
+                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
+                                <span>Quantization &amp; Formats</span>
+                                <span class="text-xs code-font text-[var(--text-muted)]">GGUF • AWQ • FP8</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">Model loaders, tensor quantization, and format parsers.</p>
+                        </div>
+
+                        <div class="space-y-1 pt-3 border-t border-[var(--divider)]">
+                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
+                                <span>Runtime &amp; Bindings</span>
+                                <span class="text-xs code-font text-[var(--text-muted)]">CLI • Python • FFI</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">Scheduler, tokenizer streaming, and API wrappers.</p>
+                        </div>
+
+                        <div class="space-y-1 pt-3 border-t border-[var(--divider)]">
+                            <div class="font-semibold text-sm text-[var(--text)] flex items-center justify-between">
+                                <span>Benchmarks &amp; Guides</span>
+                                <span class="text-xs code-font text-[var(--text-muted)]">Docs • QA • Perf</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">Latency benchmark suites and integration test harnesses.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Direct Email Badge -->
-                <div class="p-6 rounded-2xl bg-teal-500/5 border border-teal-500/20 flex items-center justify-between gap-4">
+                <!-- Direct Email & Issues Badge -->
+                <div class="p-5 rounded-2xl themed-card flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <i data-lucide="mail" class="w-5 h-5 primary-color"></i>
+                        <div class="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
+                            <i data-lucide="mail" class="w-5 h-5 primary-color"></i>
+                        </div>
                         <div>
-                            <div class="text-xs font-bold uppercase tracking-wider opacity-50">Direct Contact</div>
-                            <div class="text-sm font-semibold code-font">kdtastan@gmail.com</div>
+                            <div class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Direct Contact</div>
+                            <div class="text-sm font-semibold code-font text-[var(--text)]">kdtastan@gmail.com</div>
                         </div>
                     </div>
-                    <a href="https://github.com/Kem0wow/rustylm/issues" target="_blank" rel="noopener noreferrer" class="btn-secondary px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:scale-105 transition">
+                    <a href="https://github.com/Kem0wow/rustylm/issues" target="_blank" rel="noopener noreferrer" class="btn-secondary px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
                         <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                        <span>GitHub Issues</span>
+                        <span>Issues</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Right Panel: Mail & Message Form with Formspree -->
-            <div class="lg:col-span-7 p-8 md:p-10 rounded-[32px] window-frame shadow-2xl">
-                <div class="mb-8">
-                    <h3 class="text-2xl font-bold mb-2">Send a Message</h3>
-                    <p class="text-sm opacity-60">Fill out the form below to get in touch with the core maintainers.</p>
+            <!-- Right Panel: Compact & Sleek Message Form -->
+            <div class="lg:col-span-7 p-6 sm:p-8 rounded-2xl window-frame">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold mb-1.5">Send a Message</h3>
+                    <p class="text-sm text-[var(--text-muted)]">Get in touch directly with the core maintainers.</p>
                 </div>
 
-                <form id="contactForm" action="https://formspree.io/f/xyegjdqw" method="POST" class="space-y-6" onsubmit="handleContactSubmit(event)">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <form id="contactForm" action="https://formspree.io/f/xyegjdqw" method="POST" class="space-y-4" onsubmit="handleContactSubmit(event)">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-2">
-                            <label for="name" class="block text-xs font-bold uppercase tracking-wider opacity-70">Your Name</label>
-                            <input type="text" id="name" name="name" required placeholder="Ali Veli" class="w-full px-4 py-3.5 rounded-xl custom-input text-sm">
+                            <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Your Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Ali Veli" class="w-full px-4 py-2.5 rounded-xl custom-input text-sm">
                         </div>
                         <div class="space-y-2">
-                            <label for="email" class="block text-xs font-bold uppercase tracking-wider opacity-70">Email Address</label>
-                            <input type="email" id="email" name="email" required placeholder="ali@veli.com" class="w-full px-4 py-3.5 rounded-xl custom-input text-sm">
+                            <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="ali@veli.com" class="w-full px-4 py-2.5 rounded-xl custom-input text-sm">
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <label for="subject" class="block text-xs font-bold uppercase tracking-wider opacity-70">Subject / Purpose</label>
-                        <select id="subject" name="subject" required class="w-full px-4 py-3.5 rounded-xl custom-input text-sm">
+                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Subject / Purpose</label>
+                        <select id="subject" name="subject" required class="w-full px-4 py-2.5 rounded-xl custom-input text-sm">
                             <option value="contribute">Wanna Contribute / Collaborator Inquiry</option>
                             <option value="general">General Question</option>
                             <option value="feature">Feature Proposal / Idea</option>
@@ -209,15 +198,15 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label for="message" class="block text-xs font-bold uppercase tracking-wider opacity-70">Message</label>
-                        <textarea id="message" name="message" rows="5" required placeholder="Tell us about yourself, your ideas, or how you'd like to collaborate on RustyLM..." class="w-full px-4 py-3.5 rounded-xl custom-input text-sm resize-none"></textarea>
+                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-[var(--text)]">Message</label>
+                        <textarea id="message" name="message" rows="4" required placeholder="Tell us about yourself, your ideas, or how you'd like to collaborate on RustyLM..." class="w-full px-4 py-2.5 rounded-xl custom-input text-sm resize-none"></textarea>
                     </div>
 
-                    <div id="formSuccess" class="hidden p-4 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm font-semibold flex items-center gap-3">
+                    <div id="formSuccess" class="hidden p-3.5 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 text-sm font-semibold flex items-center gap-2">
                         <!-- Content injected via JS on success/error -->
                     </div>
 
-                    <button type="submit" id="submitBtn" class="w-full bg-primary text-white py-4 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-3 hover:opacity-90 transition shadow-neon">
+                    <button type="submit" id="submitBtn" class="w-full bg-primary text-white py-3 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition">
                         <i data-lucide="send" class="w-4 h-4"></i>
                         <span>Send Message</span>
                     </button>
@@ -244,7 +233,7 @@
 
             <!-- Right Side: Wanna Contribute? Button -->
             <div class="flex items-center">
-                <a href="#" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:scale-105 transition shadow-sm">
+                <a href="#" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition">
                     <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
                     <span>Wanna Contribute?</span>
                 </a>

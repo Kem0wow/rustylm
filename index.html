@@ -12,7 +12,9 @@
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -32,19 +34,19 @@
                 <img id="navIcon" src="images/icon-dark.png" alt="RustyLM icon" class="w-9 h-9 object-contain">
                 <span class="font-black text-lg tracking-tight">RustyLM</span>
             </a>
-            <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
-                <a href="docs.html" class="hover:primary-color transition">Docs</a>
-                <a href="benchmarks.html" class="hover:primary-color transition">Benchmarks</a>
-                <a href="contacts.html" class="hover:primary-color transition">Contacts</a>
+            <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="docs.html" class="hover:text-[var(--text)] hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="hover:text-[var(--text)] hover:primary-color transition">Benchmarks</a>
+                <a href="contacts.html" class="hover:text-[var(--text)] hover:primary-color transition">Contacts</a>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition" title="View repository on GitHub">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                    <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
                     <span class="starCountEl">1</span>
                 </a>
                 <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition">Installation</a>
                 <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
@@ -73,11 +75,11 @@
                         <span>GitHub Repository</span>
                     </span>
                     <span class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
                         <span class="starCountEl">1</span>
                     </span>
                 </a>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition shadow-sm w-full block">
+                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition w-full block">
                     Installation
                 </a>
             </div>
@@ -86,110 +88,114 @@
 
     <!-- Hero Section -->
     <main id="hero" class="max-w-7xl mx-auto px-8 py-12 flex flex-col items-center text-center">
-        <h1 class="text-[64px] md:text-[84px] font-black leading-[0.9] mb-8 tracking-tighter max-w-4xl">
+        <h1 class="animate-reveal text-[56px] md:text-[80px] font-black leading-[0.95] mb-8 tracking-tighter max-w-4xl">
             Inference.<br><span class="primary-color">Hardened.</span> By Rust.
         </h1>
-        <p class="opacity-60 text-lg md:text-xl mb-12 max-w-2xl leading-relaxed">
+        <p class="animate-reveal reveal-delay-1 text-base md:text-lg mb-12 max-w-2xl leading-relaxed text-[var(--text-muted)]">
             A blazing fast, memory-safe LLM engine built for performance-critical local deployments. Zero telemetry, zero overhead.
         </p>
         
-        <div class="flex flex-wrap justify-center gap-4 mb-24">
-            <button class="bg-primary text-white px-10 py-4 rounded-2xl font-extrabold flex items-center gap-3 hover:scale-105 transition shadow-neon">
-                <i data-lucide="terminal" class="w-5 h-5"></i> Start Building
-            </button>
-            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="btn-secondary px-10 py-4 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 transition shadow-sm">
-                <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+        <div class="animate-reveal reveal-delay-3 flex flex-wrap justify-center gap-4 mb-12">
+            <a href="docs.html" class="bg-primary text-white px-8 py-3.5 rounded-xl font-bold text-sm flex items-center gap-2.5 transition">
+                <i data-lucide="terminal" class="w-4 h-4"></i> Start Building
+            </a>
+            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="btn-secondary px-8 py-3.5 rounded-xl font-semibold text-sm flex items-center gap-2.5 transition">
+                <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
                 <span>GitHub Repository</span>
             </a>
         </div>
 
-        <!-- Terminal Window -->
-        <div class="window-frame w-full max-w-4xl text-left shadow-2xl">
-            <div class="window-header">
-                <div class="flex gap-2 mr-6">
-                    <div class="w-3 h-3 rounded-full bg-red-500/40"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-500/40"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-500/40"></div>
+        <!-- Sleek Multi-line Installation Snippet with CPU / CUDA Backend Switcher -->
+        <div class="animate-reveal reveal-delay-3 w-full max-w-2xl text-left">
+            <!-- Controls Bar: Method Tabs + Backend Toggle -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-3 px-1">
+                <!-- Method Tabs -->
+                <div class="flex items-center gap-1 sm:gap-2 text-xs code-font font-medium overflow-x-auto scrollbar-none">
+                    <button type="button" onclick="switchInstallMethod('source')" id="tabBtn-source" class="install-tab-btn active px-3.5 py-1.5 rounded-xl flex items-center gap-1.5">
+                        <i data-lucide="git-branch" class="w-3.5 h-3.5"></i>
+                        <span>Build from source</span>
+                    </button>
+                    <button type="button" onclick="switchInstallMethod('cargo')" id="tabBtn-cargo" class="install-tab-btn px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 opacity-60 hover:opacity-100">
+                        <i data-lucide="box" class="w-3.5 h-3.5"></i>
+                        <span>Cargo</span>
+                        <span class="badge-soon">Soon</span>
+                    </button>
+                    <button type="button" onclick="switchInstallMethod('pip')" id="tabBtn-pip" class="install-tab-btn px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 opacity-60 hover:opacity-100">
+                        <i data-lucide="package" class="w-3.5 h-3.5"></i>
+                        <span>Pip</span>
+                        <span class="badge-soon">Soon</span>
+                    </button>
                 </div>
-                <span class="text-[10px] opacity-60 font-bold code-font tracking-widest uppercase">rustylm-cli v0.1.0</span>
+
+                <!-- Backend Toggle (CPU vs CUDA) -->
+                <div class="flex items-center p-1 rounded-xl bg-white/5 border border-white/10 text-xs code-font font-semibold">
+                    <button type="button" onclick="switchBackend('cpu')" id="backendBtn-cpu" class="px-3 py-1 rounded-lg transition text-xs bg-[var(--card-bg)] text-[var(--primary)] border border-white/10 font-bold">
+                        CPU
+                    </button>
+                    <button type="button" onclick="switchBackend('cuda')" id="backendBtn-cuda" class="px-3 py-1 rounded-lg transition text-xs opacity-60 hover:opacity-100">
+                        CUDA
+                    </button>
+                </div>
             </div>
-            <div class="p-8 md:p-12 code-font text-[14px] leading-relaxed overflow-hidden">
-                <pre class="terminal-ascii mb-8 overflow-x-auto">
- ███████████                       █████               █████       ██████   ██████
-▒▒███▒▒▒▒▒███                     ▒▒███               ▒▒███       ▒▒██████ ██████ 
- ▒███    ▒███  █████ ████  █████  ███████   █████ ████ ▒███        ▒███▒█████▒███ 
- ▒██████████  ▒▒███ ▒███  ███▒▒  ▒▒▒███▒   ▒▒███ ▒███  ▒███        ▒███▒▒███ ▒███ 
- ▒███▒▒▒▒▒███  ▒███ ▒███ ▒▒█████   ▒███     ▒███ ▒███  ▒███        ▒███ ▒▒▒  ▒███ 
- ▒███    ▒███  ▒███ ▒███  ▒▒▒▒███  ▒███ ███ ▒███ ▒███  ▒███      █ ▒███      ▒███ 
- █████   █████ ▒▒████████ ██████   ▒▒█████  ▒▒███████  ███████████ █████     █████
-▒▒▒▒▒   ▒▒▒▒▒   ▒▒▒▒▒▒▒▒ ▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒███ ▒▒▒▒▒▒▒▒▒▒▒ ▒▒▒▒▒     ▒▒▒▒▒ 
-                                             ███ ▒███                             
-                                            ▒▒██████                              
-                                             ▒▒▒▒▒▒                               </pre>
-                <div class="space-y-2 mb-6">
-                    <div class="flex gap-3">
-                        <span class="primary-color opacity-90 font-black">#</span>
-                        <span>rustylm run qwen2.5-7b --cuda</span>
-                    </div>
-                    <div class="terminal-muted ml-6">
-                        <div>↳ Initializing CUDA stream... done.</div>
-                        <div>↳ Loading 290 tensors to VRAM... (482ms)</div>
-                        <div>↳ Hybrid Offloading: 21 GPU / 7 CPU layers.</div>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <span class="primary-color font-bold">You:</span> Explain Zero-Copy.
-                </div>
-                <div class="mb-8 leading-relaxed opacity-90">
-                    <span class="primary-color font-bold">rustylm:</span> Zero-copy in rustylm allows mapping weights directly from disk to memory via mmap, bypassing redundant CPU allocations.
+
+            <!-- Multi-line Code Frame -->
+            <div class="themed-card rounded-2xl p-4 sm:p-5 border border-white/10 shadow-sm relative">
+                <div class="flex items-start justify-between gap-4">
+                    <pre id="installCodeBlock" class="code-font text-xs sm:text-sm leading-relaxed overflow-x-auto text-[var(--text)] select-text"><span class="opacity-50 select-none">$ </span><span>git clone https://github.com/Kem0wow/rustylm.git</span>
+<span class="opacity-50 select-none">$ </span><span>cd rustylm</span>
+<span class="opacity-50 select-none">$ </span><span>cargo build --release</span></pre>
+                    <button id="installCopyBtn" onclick="copyInstallCommand(this)" class="btn-secondary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition flex-shrink-0" title="Copy commands">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        <span>Copy</span>
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Features Section -->
-    <section id="architecture" class="max-w-7xl mx-auto px-8 py-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div class="p-10 rounded-[32px] themed-card group">
-            <i data-lucide="zap" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
-            <h3 class="text-xl font-bold mb-4">Speed</h3>
-            <p class="text-sm opacity-60 leading-relaxed">Engineered in Rust for bare-metal performance and ultra-low latency.</p>
+    <section id="architecture" class="max-w-7xl mx-auto px-8 py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="p-8 rounded-2xl themed-card">
+            <i data-lucide="zap" class="primary-color w-8 h-8 mb-6"></i>
+            <h3 class="text-lg font-bold mb-3">Speed</h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed">Engineered in Rust for bare-metal performance and ultra-low latency.</p>
         </div>
-        <div class="p-10 rounded-[32px] themed-card group">
-            <i data-lucide="shield-check" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
-            <h3 class="text-xl font-bold mb-4">Safety</h3>
-            <p class="text-sm opacity-60 leading-relaxed">Leverages Rust's borrow checker to ensure memory safety during heavy inference.</p>
+        <div class="p-8 rounded-2xl themed-card">
+            <i data-lucide="shield-check" class="primary-color w-8 h-8 mb-6"></i>
+            <h3 class="text-lg font-bold mb-3">Safety</h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed">Leverages Rust's borrow checker to ensure memory safety during heavy inference.</p>
         </div>
-        <div class="p-10 rounded-[32px] themed-card group">
-            <i data-lucide="cpu" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
-            <h3 class="text-xl font-bold mb-4">Accelerator</h3>
-            <p class="text-sm opacity-60 leading-relaxed">Native support for NVIDIA CUDA, Apple Metal, and AMD ROCm.</p>
+        <div class="p-8 rounded-2xl themed-card">
+            <i data-lucide="cpu" class="primary-color w-8 h-8 mb-6"></i>
+            <h3 class="text-lg font-bold mb-3">Accelerator</h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed">Native support for NVIDIA CUDA, Apple Metal, and AMD ROCm.</p>
         </div>
-        <div class="p-10 rounded-[32px] themed-card group">
-            <i data-lucide="layers" class="primary-color w-10 h-10 mb-8 group-hover:scale-110 transition"></i>
-            <h3 class="text-xl font-bold mb-4">Hybrid Mode</h3>
-            <p class="text-sm opacity-60 leading-relaxed">Intelligent layer offloading between CPU and GPU for large models.</p>
+        <div class="p-8 rounded-2xl themed-card">
+            <i data-lucide="layers" class="primary-color w-8 h-8 mb-6"></i>
+            <h3 class="text-lg font-bold mb-3">Hybrid Mode</h3>
+            <p class="text-sm text-[var(--text-muted)] leading-relaxed">Intelligent layer offloading between CPU and GPU for large models.</p>
         </div>
     </section>
 
     <!-- Local First Section -->
     <section id="docs" class="max-w-7xl mx-auto px-8 py-24 themed-divider flex flex-col items-center text-center">
-        <div class="inline-block px-4 py-1 bg-teal-500/10 primary-color border border-teal-500/20 rounded-full text-[10px] font-bold uppercase mb-8">Local-First Engine</div>
-        <h2 class="text-5xl md:text-7xl font-black mb-10 tracking-tighter">No Cloud. No Compromise.</h2>
-        <p class="opacity-60 text-xl max-w-3xl leading-relaxed mb-16">
+        <div class="inline-block px-4 py-1.5 bg-teal-500/10 primary-color border border-teal-500/20 rounded-full text-xs font-bold uppercase mb-8">Local-First Engine</div>
+        <h2 class="text-4xl md:text-6xl font-black mb-8 tracking-tighter">No Cloud. No Compromise.</h2>
+        <p class="text-base md:text-lg max-w-3xl leading-relaxed mb-16 text-[var(--text-muted)]">
             rustylm is designed to run entirely on your hardware. 
             From weight loading to token generation, you have absolute control over your data and environment.
         </p>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 w-full max-w-4xl opacity-70">
-            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 w-full max-w-4xl">
+            <div class="flex flex-col items-center gap-2.5 font-bold uppercase tracking-wider text-xs sm:text-sm text-[var(--text)]">
                 <i data-lucide="wifi-off" class="w-6 h-6 primary-color"></i> Offline
             </div>
-            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+            <div class="flex flex-col items-center gap-2.5 font-bold uppercase tracking-wider text-xs sm:text-sm text-[var(--text)]">
                 <i data-lucide="lock" class="w-6 h-6 primary-color"></i> Private
             </div>
-            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+            <div class="flex flex-col items-center gap-2.5 font-bold uppercase tracking-wider text-xs sm:text-sm text-[var(--text)]">
                 <i data-lucide="binary" class="w-6 h-6 primary-color"></i> Modular
             </div>
-            <div class="flex flex-col items-center gap-2 font-bold uppercase tracking-widest text-[11px]">
+            <div class="flex flex-col items-center gap-2.5 font-bold uppercase tracking-wider text-xs sm:text-sm text-[var(--text)]">
                 <i data-lucide="file-code" class="w-6 h-6 primary-color"></i> MIT Licensed
             </div>
         </div>
@@ -212,7 +218,7 @@
 
             <!-- Right Side: Wanna Contribute? Button -->
             <div class="flex items-center">
-                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:scale-105 transition shadow-sm">
+                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition">
                     <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
                     <span>Wanna Contribute?</span>
                 </a>
@@ -252,6 +258,81 @@
             modeToggle.addEventListener('click', () => {
                 updateTheme(root.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
             });
+        }
+
+        const installData = {
+            source: {
+                cpu: `git clone https://github.com/Kem0wow/rustylm.git\ncd rustylm\ncargo build --release`,
+                cuda: `git clone https://github.com/Kem0wow/rustylm.git\ncd rustylm\ncargo build --release --features cuda`
+            },
+            cargo: {
+                cpu: `# Coming soon to crates.io\ncargo install rustylm`,
+                cuda: `# Coming soon to crates.io\ncargo install rustylm --features cuda`
+            },
+            pip: {
+                cpu: `# Coming soon to PyPI\npip install rustylm`,
+                cuda: `# Coming soon to PyPI\npip install rustylm-cuda`
+            }
+        };
+
+        let currentMethod = 'source';
+        let currentBackend = 'cpu';
+
+        function renderInstallCode() {
+            const rawText = (installData[currentMethod] && installData[currentMethod][currentBackend]) || installData.source.cpu;
+            const codeBlock = document.getElementById('installCodeBlock');
+            if (!codeBlock) return;
+            
+            const lines = rawText.split('\n');
+            const formattedHtml = lines.map(line => {
+                if (line.startsWith('#')) {
+                    return `<span class="opacity-50 select-none italic">${line}</span>`;
+                }
+                return `<span class="opacity-50 select-none">$ </span><span>${line}</span>`;
+            }).join('\n');
+            
+            codeBlock.innerHTML = formattedHtml;
+        }
+
+        function switchInstallMethod(method) {
+            currentMethod = method;
+            document.querySelectorAll('.install-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('opacity-60');
+            });
+            const activeBtn = document.getElementById(`tabBtn-${method}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.classList.remove('opacity-60');
+            }
+            renderInstallCode();
+        }
+
+        function switchBackend(backend) {
+            currentBackend = backend;
+            const cpuBtn = document.getElementById('backendBtn-cpu');
+            const cudaBtn = document.getElementById('backendBtn-cuda');
+            
+            if (backend === 'cpu') {
+                cpuBtn.className = 'px-2.5 py-1 rounded-lg transition text-[11px] bg-[var(--card-bg)] text-[var(--primary)] border border-white/10 font-bold';
+                cudaBtn.className = 'px-2.5 py-1 rounded-lg transition text-[11px] opacity-60 hover:opacity-100';
+            } else {
+                cudaBtn.className = 'px-2.5 py-1 rounded-lg transition text-[11px] bg-[var(--card-bg)] text-[var(--primary)] border border-white/10 font-bold';
+                cpuBtn.className = 'px-2.5 py-1 rounded-lg transition text-[11px] opacity-60 hover:opacity-100';
+            }
+            renderInstallCode();
+        }
+
+        function copyInstallCommand(btn) {
+            const rawText = (installData[currentMethod] && installData[currentMethod][currentBackend]) || installData.source.cpu;
+            navigator.clipboard.writeText(rawText);
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-teal-400"></i><span class="text-teal-400">Copied!</span>`;
+            if (window.lucide) lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                if (window.lucide) lucide.createIcons();
+            }, 2000);
         }
 
         async function fetchStarCount() {

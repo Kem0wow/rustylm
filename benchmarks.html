@@ -12,7 +12,9 @@
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -29,7 +31,7 @@
     <div class="nav-container">
         <nav class="nav-content">
             <div class="flex items-center gap-2">
-                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center hover:scale-105 transition" title="Back to Home" aria-label="Back to Home">
+                <a href="index.html" class="btn-secondary p-2 rounded-xl flex items-center justify-center transition" title="Back to Home" aria-label="Back to Home">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                 </a>
                 <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition cursor-pointer ml-0.5">
@@ -37,19 +39,19 @@
                     <span class="font-black text-lg tracking-tight hidden sm:inline-block">RustyLM</span>
                 </a>
             </div>
-            <div class="hidden md:flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">
-                <a href="docs.html" class="hover:primary-color transition">Docs</a>
-                <a href="benchmarks.html" class="primary-color font-extrabold transition">Benchmarks</a>
-                <a href="contacts.html" class="hover:primary-color transition">Contacts</a>
+            <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                <a href="docs.html" class="hover:text-[var(--text)] hover:primary-color transition">Docs</a>
+                <a href="benchmarks.html" class="primary-color font-bold">Benchmarks</a>
+                <a href="contacts.html" class="hover:text-[var(--text)] hover:primary-color transition">Contacts</a>
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 hover:scale-105 transition" title="View repository on GitHub">
+                <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="github-star-badge hidden sm:flex px-3 py-1.5 rounded-xl text-xs font-semibold items-center gap-2 transition" title="View repository on GitHub">
                     <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
-                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                    <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
                     <span class="starCountEl">1</span>
                 </a>
                 <button id="modeToggle" class="opacity-60 hover:opacity-100 transition p-2 flex items-center justify-center" aria-label="Toggle Theme"></button>
-                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition shadow-sm">Installation</a>
+                <a href="docs.html" class="bg-primary text-white hidden sm:inline-block px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider hover:opacity-90 transition">Installation</a>
                 <button id="mobileMenuBtn" class="md:hidden opacity-80 hover:opacity-100 transition p-2 flex items-center justify-center btn-secondary rounded-xl" aria-label="Toggle Menu" aria-expanded="false">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
@@ -62,9 +64,9 @@
                     <span>Docs</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
                 </a>
-                <a href="benchmarks.html" class="p-3 rounded-xl bg-white/5 primary-color font-black transition flex items-center justify-between">
+                <a href="benchmarks.html" class="p-3 rounded-xl hover:bg-white/5 primary-color transition flex items-center justify-between font-bold">
                     <span>Benchmarks</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 primary-color"></i>
+                    <i data-lucide="chevron-right" class="w-4 h-4 opacity-40"></i>
                 </a>
                 <a href="contacts.html" class="p-3 rounded-xl hover:bg-white/5 hover:primary-color transition flex items-center justify-between opacity-80 hover:opacity-100">
                     <span>Contacts</span>
@@ -78,11 +80,11 @@
                         <span>GitHub Repository</span>
                     </span>
                     <span class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                        <i data-lucide="star" class="w-3.5 h-3.5 star-colored"></i>
                         <span class="starCountEl">1</span>
                     </span>
                 </a>
-                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition shadow-sm w-full block">
+                <a href="docs.html" class="bg-primary text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center hover:opacity-90 transition w-full block">
                     Installation
                 </a>
             </div>
@@ -91,54 +93,48 @@
 
     <!-- Coming Soon Hero Content -->
     <main class="max-w-7xl mx-auto px-8 py-12 flex flex-col items-center text-center">
-
-        <div class="inline-block px-4 py-1.5 bg-teal-500/10 primary-color border border-teal-500/20 rounded-full text-xs font-bold uppercase tracking-wider mb-8 flex items-center gap-2">
-            <i data-lucide="gauge" class="w-4 h-4 animate-pulse"></i>
-            <span>Performance Suite Under Construction</span>
-        </div>
-
-        <h1 class="text-5xl md:text-8xl font-black leading-[1] mb-8 tracking-tighter max-w-4xl">
+        <h1 class="animate-reveal text-5xl md:text-7xl font-black leading-[1] mb-6 tracking-tighter max-w-4xl">
             Benchmarks<br><span class="primary-color">Coming Soon.</span>
         </h1>
         
-        <p class="opacity-60 text-lg md:text-xl mb-12 max-w-2xl leading-relaxed">
+        <p class="animate-reveal reveal-delay-1 text-base md:text-lg mb-12 max-w-2xl leading-relaxed text-[var(--text-muted)]">
             We are currently running comprehensive latency, memory throughput, and tokens-per-second benchmark suites comparing RustyLM against other frameworks.
         </p>
 
         <!-- Preview Feature Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mb-16 text-left">
-            <div class="p-8 rounded-[28px] themed-card space-y-4">
-                <div class="w-10 h-10 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
-                    <i data-lucide="zap" class="w-5 h-5"></i>
+        <div class="animate-reveal reveal-delay-3 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl mb-16 text-left">
+            <div class="p-8 rounded-2xl themed-card space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg font-bold">Tokens/Sec Speed</h3>
-                <p class="text-xs opacity-60 leading-relaxed">TTFT (Time To First Token) and sustained generation speed across concurrent batch sizes.</p>
+                <h3 class="text-xl font-bold">Tokens/Sec Speed</h3>
+                <p class="text-sm text-[var(--text-muted)] leading-relaxed">TTFT (Time To First Token) and sustained generation speed across concurrent batch sizes.</p>
             </div>
             
-            <div class="p-8 rounded-[28px] themed-card space-y-4">
-                <div class="w-10 h-10 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
-                    <i data-lucide="cpu" class="w-5 h-5"></i>
+            <div class="p-8 rounded-2xl themed-card space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
+                    <i data-lucide="cpu" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg font-bold">VRAM Efficiency</h3>
-                <p class="text-xs opacity-60 leading-relaxed">Memory footprint analysis showing Zero-Copy mmap savings vs standard GPU allocations.</p>
+                <h3 class="text-xl font-bold">VRAM Efficiency</h3>
+                <p class="text-sm text-[var(--text-muted)] leading-relaxed">Memory footprint analysis showing Zero-Copy mmap savings vs standard GPU allocations.</p>
             </div>
 
-            <div class="p-8 rounded-[28px] themed-card space-y-4">
-                <div class="w-10 h-10 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
-                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+            <div class="p-8 rounded-2xl themed-card space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-teal-500/10 primary-color flex items-center justify-center">
+                    <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg font-bold">Hardware Matrix</h3>
-                <p class="text-xs opacity-60 leading-relaxed">Comparative performance graphs across different hardware platforms (NVIDIA, AMD, Apple).</p>
+                <h3 class="text-xl font-bold">Hardware Matrix</h3>
+                <p class="text-sm text-[var(--text-muted)] leading-relaxed">Comparative performance graphs across different hardware platforms (NVIDIA, AMD, Apple).</p>
             </div>
         </div>
 
         <!-- Action Callouts -->
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="bg-primary text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:scale-105 transition shadow-sm">
-                <svg class="w-5 h-5 fill-current"><use href="#gh-icon"/></svg>
+            <a href="https://github.com/Kem0wow/rustylm" target="_blank" rel="noopener noreferrer" class="bg-primary text-white px-8 py-3.5 rounded-xl font-bold text-sm flex items-center gap-3 transition">
+                <svg class="w-4 h-4 fill-current"><use href="#gh-icon"/></svg>
                 <span>Follow on GitHub</span>
             </a>
-            <a href="contacts.html" class="btn-secondary px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center gap-3 hover:scale-105 transition shadow-sm">
+            <a href="contacts.html" class="btn-secondary px-8 py-3.5 rounded-xl font-semibold text-sm flex items-center gap-3 transition">
                 <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
                 <span>Wanna Submit Benchmark Data?</span>
             </a>
@@ -162,7 +158,7 @@
 
             <!-- Right Side: Wanna Contribute? Button -->
             <div class="flex items-center">
-                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:scale-105 transition shadow-sm">
+                <a href="contacts.html" class="btn-secondary px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition">
                     <i data-lucide="git-pull-request" class="w-4 h-4 primary-color"></i>
                     <span>Wanna Contribute?</span>
                 </a>
