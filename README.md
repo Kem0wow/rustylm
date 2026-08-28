@@ -24,21 +24,31 @@ cargo build --release --features cuda  # CPU + CUDA
 | `list`, `ls`         | List available local models                     |
 | `help`                 | Help about any command                          |
 
-### Flags (for `run`)
+### Flags & Environment Variables
 
-| flag                   | meaning                                             |
-| ---------------------- | --------------------------------------------------- |
-| `-p, --prompt TEXT`  | answer once and exit                                |
-| `-t, --temp F`       | sampling temperature,`0` for greedy (default 0.7) |
-| `-n, --max-tokens N` | generation limit (default 512)                      |
-| `-d, --device DEV`   | device backend (`auto`, `cuda`, `cpu`)        |
-| `--cuda` / `--cpu` | force a backend (default: auto)                     |
-| `RUSTYLM_VRAM_CAP`   | cap how much VRAM the weights may take (in MiB)     |
+| flag / variable          | meaning                                             |
+| ------------------------ | --------------------------------------------------- |
+| `-p, --prompt TEXT`      | answer once and exit                                |
+| `-t, --temp F`           | sampling temperature, `0` for greedy (default 0.7) |
+| `-n, --max-tokens N`     | generation limit (default 512)                      |
+| `-d, --device DEV`       | device backend (`auto`, `cuda`, `cpu`)              |
+| `--cuda` / `--cpu`       | force a backend (default: auto)                     |
+| `RUSTYLM_MODELS_DIR`     | custom directory to search for models (highest priority) |
+| `RUSTYLM_VRAM_CAP`       | cap how much VRAM the weights may take (in MiB)     |
+
+### Model Locations
+
+By default, RustyLM searches for models in:
+1. `$RUSTYLM_MODELS_DIR` (if set)
+2. `~/Models` (default user model directory)
+3. `~/.rustylm/models`
+4. `~/.cache/huggingface/hub/` (automatically detects downloaded HuggingFace models)
+5. `./models` (current directory)
 
 ## Library API
 
 ```rust
-use rustylm_runtime::{Device, Engine, Params};
+use rustylm::{Device, Engine, Params};
 
 let engine = Engine::load("models/qwen2.5-1.5b-instruct", Device::Auto)?;
 println!("{}", engine.ask("What is the capital of France?")?);

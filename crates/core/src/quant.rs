@@ -4,10 +4,6 @@ use safetensors::Dtype;
 
 pub const BLOCK: usize = 32;
 
-// ─── Q8 block-quantized tensor ────────────────────────────────────────────
-// Row-major [rows, cols]. Every BLOCK weights share one f32 scale, so a
-// weight costs 1 byte + 1/8 byte instead of 4.
-
 pub struct QTensor {
     pub q: Vec<i8>,
     pub s: Vec<f32>,
@@ -20,66 +16,82 @@ impl QTensor {
     pub fn from_view(view: &TensorView<'_>) -> Self {
         let (rows, cols) = shape_2d(view.shape());
         let (data, dtype) = (view.data(), view.dtype());
-        Self::build(rows, cols, |i| elem(data, dtype, i))
-    }
-
-    pub fn from_f32(data: &[f32], rows: usize, cols: usize) -> Self {
-        Self::build(rows, cols, |i| data[i])
-    }
-
-    fn build(rows: usize, cols: usize, read: impl Fn(usize) -> f32 + Sync) -> Self {
         let blocks = cols.div_ceil(BLOCK);
         let mut q = vec![0i8; rows * cols];
         let mut s = vec![0f32; rows * blocks];
 
-        q.par_chunks_mut(cols)
-            .zip(s.par_chunks_mut(blocks))
-            .enumerate()
-            .for_each(|(r, (qr, sr))| {
-                let mut buf = [0f32; BLOCK];
-                for b in 0..blocks {
-                    let lo = b * BLOCK;
-                    let hi = (lo + BLOCK).min(cols);
-                    let mut amax = 0f32;
-                    for i in lo..hi {
-                        let v = read(r * cols + i);
-                        buf[i - lo] = v;
-                        amax = amax.max(v.abs());
-                    }
-                    let scale = amax / 127.0;
-                    sr[b] = scale;
-                    let inv = if scale > 0.0 { 1.0 / scale } else { 0.0 };
-                    for i in lo..hi {
-                        qr[i] = (buf[i - lo] * inv).round().clamp(-127.0, 127.0) as i8;
-                    }
+        let elem_size = match dtype {
+            Dtype::F32 => 4,
+            Dtype::BF16 | Dtype::F16 => 2,
+            other => panic!("unsupported dtype: {other:?}"),
+        };
+
+        q.par_chunks_mut(cols).zip(s.par_chunks_mut(blocks)).enumerate().for_each(|(r, (qr, sr))| {
+            let row_bytes = &data[r * cols * elem_size..(r + 1) * cols * elem_size];
+            let mut buf = [0f32; BLOCK];
+            for b in 0..blocks {
+                let (lo, hi) = (b * BLOCK, (b * BLOCK + BLOCK).min(cols));
+                let chunk = &row_bytes[lo * elem_size..hi * elem_size];
+                let mut amax = 0f32;
+                match dtype {
+                    Dtype::F32 => for (i, c) in chunk.chunks_exact(4).enumerate() {
+                        let v = f32::from_le_bytes(c.try_into().unwrap());
+                        buf[i] = v; amax = amax.max(v.abs());
+                    },
+                    Dtype::BF16 => for (i, c) in chunk.chunks_exact(2).enumerate() {
+                        let v = f32::from_bits((u16::from_le_bytes(c.try_into().unwrap()) as u32) << 16);
+                        buf[i] = v; amax = amax.max(v.abs());
+                    },
+                    Dtype::F16 => for (i, c) in chunk.chunks_exact(2).enumerate() {
+                        let v = f16_to_f32(u16::from_le_bytes(c.try_into().unwrap()));
+                        buf[i] = v; amax = amax.max(v.abs());
+                    },
+                    _ => unreachable!(),
                 }
-            });
+                let scale = amax / 127.0;
+                sr[b] = scale;
+                let inv = if scale > 0.0 { 1.0 / scale } else { 0.0 };
+                for i in 0..hi - lo {
+                    qr[lo + i] = (buf[i] * inv).round().clamp(-127.0, 127.0) as i8;
+                }
+            }
+        });
+
+        Self { q, s, rows, cols, blocks }
+    }
+
+    pub fn from_f32(data: &[f32], rows: usize, cols: usize) -> Self {
+        let blocks = cols.div_ceil(BLOCK);
+        let mut q = vec![0i8; rows * cols];
+        let mut s = vec![0f32; rows * blocks];
+
+        q.par_chunks_mut(cols).zip(s.par_chunks_mut(blocks)).enumerate().for_each(|(r, (qr, sr))| {
+            let row = &data[r * cols..(r + 1) * cols];
+            for b in 0..blocks {
+                let (lo, hi) = (b * BLOCK, (b * BLOCK + BLOCK).min(cols));
+                let amax = row[lo..hi].iter().fold(0f32, |m, &x| m.max(x.abs()));
+                let scale = amax / 127.0;
+                sr[b] = scale;
+                let inv = if scale > 0.0 { 1.0 / scale } else { 0.0 };
+                for i in lo..hi {
+                    qr[i] = (row[i] * inv).round().clamp(-127.0, 127.0) as i8;
+                }
+            }
+        });
 
         Self { q, s, rows, cols, blocks }
     }
 
     pub fn row(&self, r: usize, out: &mut [f32]) {
-        let q = &self.q[r * self.cols..(r + 1) * self.cols];
-        let s = &self.s[r * self.blocks..(r + 1) * self.blocks];
-        for (b, &scale) in s.iter().enumerate() {
-            let lo = b * BLOCK;
-            let hi = (lo + BLOCK).min(self.cols);
-            for i in lo..hi {
-                out[i] = q[i] as f32 * scale;
-            }
+        let (qr, sr) = (&self.q[r * self.cols..(r + 1) * self.cols], &self.s[r * self.blocks..(r + 1) * self.blocks]);
+        for (b, &scale) in sr.iter().enumerate() {
+            let (lo, hi) = (b * BLOCK, (b * BLOCK + BLOCK).min(self.cols));
+            for i in lo..hi { out[i] = qr[i] as f32 * scale; }
         }
     }
 
-    pub fn row_bytes(&self) -> usize {
-        self.cols + self.blocks * 4
-    }
-
-    pub fn bytes(&self) -> usize {
-        self.rows * self.row_bytes()
-    }
+    pub fn row_bytes(&self) -> usize { self.cols + self.blocks * 4 }
 }
-
-// ─── Helpers ──────────────────────────────────────────────────────────────
 
 fn shape_2d(shape: &[usize]) -> (usize, usize) {
     let cols = *shape.last().unwrap_or(&1);
@@ -87,31 +99,14 @@ fn shape_2d(shape: &[usize]) -> (usize, usize) {
     (rows, cols)
 }
 
-
-#[inline]
-fn elem(d: &[u8], dtype: Dtype, i: usize) -> f32 {
-    match dtype {
-        Dtype::F32 => f32::from_le_bytes(d[i * 4..i * 4 + 4].try_into().unwrap()),
-        Dtype::BF16 => {
-            let bits = u16::from_le_bytes(d[i * 2..i * 2 + 2].try_into().unwrap());
-            f32::from_bits((bits as u32) << 16)
-        }
-        Dtype::F16 => f16_to_f32(u16::from_le_bytes(d[i * 2..i * 2 + 2].try_into().unwrap())),
-        other => panic!("unsupported dtype: {other:?}"),
-    }
-}
-
 #[inline]
 pub fn f16_to_f32(bits: u16) -> f32 {
-    let sign = ((bits >> 15) & 1) as u32;
-    let exp = ((bits >> 10) & 0x1f) as u32;
-    let mant = (bits & 0x3ff) as u32;
+    let (sign, exp, mant) = (((bits >> 15) & 1) as u32, ((bits >> 10) & 0x1f) as u32, (bits & 0x3ff) as u32);
     match exp {
         0 if mant == 0 => f32::from_bits(sign << 31),
         0 => {
             let shift = mant.leading_zeros() - 21;
-            let e = 127 - 15 - shift;
-            f32::from_bits((sign << 31) | (e << 23) | ((mant << (shift + 13)) & 0x7f_ffff))
+            f32::from_bits((sign << 31) | ((127 - 15 - shift) << 23) | ((mant << (shift + 13)) & 0x7f_ffff))
         }
         0x1f => f32::from_bits((sign << 31) | (0xff << 23) | (mant << 13)),
         _ => f32::from_bits((sign << 31) | ((exp + 112) << 23) | (mant << 13)),

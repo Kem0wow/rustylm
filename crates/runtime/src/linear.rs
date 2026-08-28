@@ -5,7 +5,6 @@ use std::sync::Arc;
 #[cfg(feature = "cuda")]
 use rustylm_backend::cuda::{Gpu, GpuMat};
 
-/// A quantized projection. Processes its workload directly on the GPU if offloaded.
 pub struct Linear {
     w: Arc<QTensor>,
     bias: Option<Vec<f32>>,
@@ -15,25 +14,15 @@ pub struct Linear {
 
 impl Linear {
     pub fn new(w: Arc<QTensor>, bias: Option<Vec<f32>>) -> Self {
-        Self {
-            w,
-            bias,
-            #[cfg(feature = "cuda")]
-            gpu: None,
-        }
+        Self { w, bias, #[cfg(feature = "cuda")] gpu: None }
     }
 
-    pub fn rows(&self) -> usize {
-        self.w.rows
-    }
+    pub fn rows(&self) -> usize { self.w.rows }
 
-    /// Move as many rows as `budget` bytes allow onto the GPU; returns bytes taken.
     #[cfg(feature = "cuda")]
     pub fn offload(&mut self, gpu: &Arc<Gpu>, budget: usize) -> usize {
         let rows = (budget / self.w.row_bytes()).min(self.w.rows);
-        if rows < 64 {
-            return 0;
-        }
+        if rows < 64 { return 0; }
         match GpuMat::upload(gpu, &self.w, rows) {
             Ok(mat) => {
                 self.gpu = Some(mat);
@@ -43,13 +32,9 @@ impl Linear {
         }
     }
 
-    pub fn forward(&self, x: &[f32]) -> Vec<f32> {
-        let mut out = vec![0f32; self.w.rows];
-        self.matvec(x, &mut out);
-        if let Some(b) = &self.bias {
-            cpu::add_bias(&mut out, b);
-        }
-        out
+    pub fn forward_into(&self, x: &[f32], out: &mut [f32]) {
+        self.matvec(x, out);
+        if let Some(b) = &self.bias { cpu::add_bias(out, b); }
     }
 
     #[cfg(not(feature = "cuda"))]
@@ -59,23 +44,13 @@ impl Linear {
 
     #[cfg(feature = "cuda")]
     fn matvec(&self, x: &[f32], out: &mut [f32]) {
-        let Some(gpu) = &self.gpu else {
-            return cpu::matvec(&self.w, x, 0, out);
-        };
-
-        // Adım 1: GPU'da olan kısmı GPU'ya kitle (split iptal)
-        let gpu_rows = gpu.rows();
-        let (head, tail) = out.split_at_mut(gpu_rows);
-
-        if gpu_rows > 0 {
-            if gpu.matvec(x, head).is_err() {
-                cpu::matvec(&self.w, x, 0, head); // Fallback
-            }
+        let Some(gpu) = &self.gpu else { return cpu::matvec(&self.w, x, 0, out); };
+        let (head, tail) = out.split_at_mut(gpu.rows());
+        if !head.is_empty() && gpu.matvec(x, head).is_err() {
+            cpu::matvec(&self.w, x, 0, head);
         }
-
-        // VRAM'e sığmayan kalan satırlar (eğer varsa) CPU'da hesaplanır
         if !tail.is_empty() {
-            cpu::matvec(&self.w, x, gpu_rows, tail);
+            cpu::matvec(&self.w, x, gpu.rows(), tail);
         }
     }
 }

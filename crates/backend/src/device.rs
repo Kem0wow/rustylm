@@ -9,43 +9,32 @@ pub enum Device {
 }
 
 impl Device {
-    /// Turn `Auto` into whatever this machine actually has.
     pub fn resolve(self) -> Self {
         match self {
-            Self::Auto if cuda_available() => Self::Cuda,
-            Self::Auto => Self::Cpu,
-            other => other,
+            Self::Auto | Self::Cuda if cuda_available() => Self::Cuda,
+            _ => Self::Cpu,
         }
     }
-
-    pub fn is_cuda(self) -> bool {
-        self == Self::Cuda
-    }
+    pub fn is_cuda(self) -> bool { self == Self::Cuda }
 }
 
 impl fmt::Display for Device {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Auto => write!(f, "auto"),
-            Self::Cpu => write!(f, "{}", crate::cpu::name()),
+            Self::Cpu => write!(f, "CPU ({})", crate::cpu::name()),
             Self::Cuda => {
                 #[cfg(feature = "cuda")]
                 if let Ok(name) = crate::cuda::device_name(0) {
-                    return write!(f, "{name} + {}", crate::cpu::name());
+                    return write!(f, "CUDA ({name}) + CPU ({})", crate::cpu::name());
                 }
-                write!(f, "cuda")
+                write!(f, "CUDA + CPU ({})", crate::cpu::name())
             }
         }
     }
 }
 
 pub fn cuda_available() -> bool {
-    #[cfg(feature = "cuda")]
-    {
-        crate::cuda::available()
-    }
-    #[cfg(not(feature = "cuda"))]
-    {
-        false
-    }
+    #[cfg(feature = "cuda")] { crate::cuda::available() }
+    #[cfg(not(feature = "cuda"))] { false }
 }

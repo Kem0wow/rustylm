@@ -1,4 +1,5 @@
 pub mod ops;
+pub mod sampling;
 
 pub fn name() -> String {
     #[cfg(target_arch = "x86_64")]

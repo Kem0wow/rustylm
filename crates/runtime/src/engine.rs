@@ -4,18 +4,16 @@ use std::path::Path;
 use std::sync::Arc;
 use std::time::Instant;
 
-use rustylm_backend::cpu::ops as cpu;
+use rustylm_backend::cpu::{ops as cpu, sampling};
 use rustylm_backend::Device;
 use rustylm_core::{Architecture, ModelConfig, QTensor, Tokenizer, Weights};
 
 use crate::kv_cache::KvCache;
 use crate::linear::Linear;
+use crate::template::{eos_ids, template};
 
-/// VRAM left free for activations and the CUDA context itself.
 #[cfg(feature = "cuda")]
 const VRAM_RESERVE: usize = 320 << 20;
-
-// ─── Public API ───────────────────────────────────────────────────────────
 
 pub struct Params {
     pub max_tokens: usize,
@@ -27,13 +25,7 @@ pub struct Params {
 
 impl Default for Params {
     fn default() -> Self {
-        Self {
-            max_tokens: 512,
-            temperature: 0.7,
-            top_p: 0.9,
-            repeat_penalty: 1.1,
-            system: "You are a helpful assistant.".into(),
-        }
+        Self { max_tokens: 512, temperature: 0.7, top_p: 0.9, repeat_penalty: 1.1, system: "You are a helpful assistant.".into() }
     }
 }
 
@@ -51,8 +43,6 @@ impl Stats {
     }
 }
 
-// ─── Model ────────────────────────────────────────────────────────────────
-
 struct Cfg {
     hidden: usize,
     heads: usize,
@@ -65,24 +55,15 @@ struct Cfg {
 }
 
 impl Cfg {
-    fn kv_dim(&self) -> usize {
-        self.kv_heads * self.head_dim
-    }
-    fn groups(&self) -> usize {
-        self.heads / self.kv_heads
-    }
+    fn kv_dim(&self) -> usize { self.kv_heads * self.head_dim }
+    fn groups(&self) -> usize { self.heads / self.kv_heads }
 }
 
 struct Layer {
     attn_norm: Vec<f32>,
     ffn_norm: Vec<f32>,
-    q: Linear,
-    k: Linear,
-    v: Linear,
-    o: Linear,
-    gate: Linear,
-    up: Linear,
-    down: Linear,
+    q: Linear, k: Linear, v: Linear, o: Linear,
+    gate: Linear, up: Linear, down: Linear,
 }
 
 pub struct Engine {
@@ -98,6 +79,36 @@ pub struct Engine {
     vram: usize,
 }
 
+struct Scratch {
+    x: Vec<f32>,
+    xn: Vec<f32>,
+    q: Vec<f32>,
+    k: Vec<f32>,
+    v: Vec<f32>,
+    attn: Vec<f32>,
+    gate: Vec<f32>,
+    up: Vec<f32>,
+    temp: Vec<f32>,
+    logits: Vec<f32>,
+}
+
+impl Scratch {
+    fn new(cfg: &Cfg, head_dim_total: usize, mlp_dim: usize, vocab_size: usize) -> Self {
+        Self {
+            x: vec![0f32; cfg.hidden],
+            xn: vec![0f32; cfg.hidden],
+            q: vec![0f32; cfg.heads * cfg.head_dim],
+            k: vec![0f32; cfg.kv_heads * cfg.head_dim],
+            v: vec![0f32; cfg.kv_heads * cfg.head_dim],
+            attn: vec![0f32; head_dim_total],
+            gate: vec![0f32; mlp_dim],
+            up: vec![0f32; mlp_dim],
+            temp: vec![0f32; cfg.hidden],
+            logits: vec![0f32; vocab_size],
+        }
+    }
+}
+
 impl Engine {
     pub fn load(dir: impl AsRef<Path>, device: Device) -> Result<Self> {
         let dir = dir.as_ref();
@@ -109,10 +120,7 @@ impl Engine {
         let tok = Tokenizer::load(dir.join("tokenizer.json")).map_err(err)?;
         let w = Weights::open(dir).map_err(err)?;
 
-        let gemma = matches!(
-            arch,
-            Architecture::Gemma | Architecture::Gemma2 | Architecture::Gemma3 | Architecture::Gemma4
-        );
+        let gemma = matches!(arch, Architecture::Gemma | Architecture::Gemma2 | Architecture::Gemma3 | Architecture::Gemma4);
         let cfg = Cfg {
             hidden: raw.hidden_size,
             heads: raw.num_attention_heads,
@@ -124,12 +132,9 @@ impl Engine {
             scale_embed: gemma,
         };
 
-        // Norm weights stay f32; Gemma stores them as (w - 1).
         let norm = |name: &str| -> Result<Vec<f32>> {
             let mut v = w.f32(name).map_err(err)?;
-            if gemma {
-                v.iter_mut().for_each(|x| *x += 1.0);
-            }
+            if gemma { v.iter_mut().for_each(|x| *x += 1.0); }
             Ok(v)
         };
         let quant = |name: &str| -> Result<Arc<QTensor>> { Ok(Arc::new(w.quant(name).map_err(err)?)) };
@@ -140,23 +145,26 @@ impl Engine {
         let mut layers = Vec::with_capacity(raw.num_hidden_layers);
         for i in 0..raw.num_hidden_layers {
             let n = |s: &str| format!("model.layers.{i}.{s}");
-            let bias = |s: String| w.f32(&s).ok();
+            let proj = |s: &str, has_bias: bool| -> Result<Linear> {
+                let bias = if has_bias { w.f32(&n(&format!("{s}.bias"))).ok() } else { None };
+                Ok(Linear::new(quant(&n(&format!("{s}.weight")))?, bias))
+            };
             layers.push(Layer {
                 attn_norm: norm(&n("input_layernorm.weight"))?,
                 ffn_norm: norm(&n("post_attention_layernorm.weight"))?,
-                q: Linear::new(quant(&n("self_attn.q_proj.weight"))?, bias(n("self_attn.q_proj.bias"))),
-                k: Linear::new(quant(&n("self_attn.k_proj.weight"))?, bias(n("self_attn.k_proj.bias"))),
-                v: Linear::new(quant(&n("self_attn.v_proj.weight"))?, bias(n("self_attn.v_proj.bias"))),
-                o: Linear::new(quant(&n("self_attn.o_proj.weight"))?, None),
-                gate: Linear::new(quant(&n("mlp.gate_proj.weight"))?, None),
-                up: Linear::new(quant(&n("mlp.up_proj.weight"))?, None),
-                down: Linear::new(quant(&n("mlp.down_proj.weight"))?, None),
+                q: proj("self_attn.q_proj", true)?,
+                k: proj("self_attn.k_proj", true)?,
+                v: proj("self_attn.v_proj", true)?,
+                o: proj("self_attn.o_proj", false)?,
+                gate: proj("mlp.gate_proj", false)?,
+                up: proj("mlp.up_proj", false)?,
+                down: proj("mlp.down_proj", false)?,
             });
         }
 
         let mut engine = Self {
             cfg,
-            arch: arch.clone(),
+            arch,
             device,
             embed,
             layers,
@@ -167,13 +175,10 @@ impl Engine {
             vram: 0,
         };
 
-        if device.is_cuda() {
-            engine.vram = engine.offload()?;
-        }
+        if device.is_cuda() { engine.vram = engine.offload()?; }
         Ok(engine)
     }
 
-    /// Fill VRAM with the heaviest matrices first; the rest stays on CPU.
     #[cfg(feature = "cuda")]
     fn offload(&mut self) -> Result<usize> {
         use rustylm_backend::cuda::Gpu;
@@ -185,103 +190,80 @@ impl Engine {
             .map_or_else(|| Gpu::free_bytes().saturating_sub(VRAM_RESERVE), |mb| mb << 20);
         let start = budget;
 
-        let take = |l: &mut Linear, budget: &mut usize| {
-            *budget = budget.saturating_sub(l.offload(&gpu, *budget));
-        };
-        take(&mut self.head, &mut budget);
+        let mut take = |l: &mut Linear| budget = budget.saturating_sub(l.offload(&gpu, budget));
+        take(&mut self.head);
         for layer in &mut self.layers {
-            for l in [
-                &mut layer.down,
-                &mut layer.gate,
-                &mut layer.up,
-                &mut layer.o,
-                &mut layer.q,
-                &mut layer.k,
-                &mut layer.v,
-            ] {
-                take(l, &mut budget);
+            for l in [&mut layer.down, &mut layer.gate, &mut layer.up, &mut layer.o, &mut layer.q, &mut layer.k, &mut layer.v] {
+                take(l);
             }
         }
         Ok(start - budget)
     }
 
     #[cfg(not(feature = "cuda"))]
-    fn offload(&mut self) -> Result<usize> {
-        Err(anyhow!("built without the `cuda` feature"))
-    }
+    fn offload(&mut self) -> Result<usize> { Err(anyhow!("built without the `cuda` feature")) }
 
-    /// Bytes of model weights currently resident in VRAM.
-    pub fn vram_bytes(&self) -> usize {
-        self.vram
-    }
+    pub fn vram_bytes(&self) -> usize { self.vram }
+    pub fn device(&self) -> Device { self.device }
+    pub fn architecture(&self) -> &Architecture { &self.arch }
 
-    pub fn device(&self) -> Device {
-        self.device
-    }
+    // ─── Forward Pass ─────────────────────────────────────────────────────
 
-    pub fn architecture(&self) -> &Architecture {
-        &self.arch
-    }
-
-    // ─── Forward pass (one token) ─────────────────────────────────────────
-
-    fn forward(&self, token: u32, pos: usize, kv: &mut KvCache) -> Vec<f32> {
+    fn forward(&self, token: u32, pos: usize, kv: &mut KvCache, s: &mut Scratch) {
         let c = &self.cfg;
-        let mut x = vec![0f32; c.hidden];
-        self.embed.row(token as usize, &mut x);
+        self.embed.row(token as usize, &mut s.x);
         if c.scale_embed {
-            let s = (c.hidden as f32).sqrt();
-            x.iter_mut().for_each(|v| *v *= s);
+            let scale = (c.hidden as f32).sqrt();
+            s.x.iter_mut().for_each(|v| *v *= scale);
         }
 
         let (cos, sin) = cpu::rope_table(c.head_dim, pos, c.rope_theta);
 
         for (i, layer) in self.layers.iter().enumerate() {
-            let xn = cpu::rms_norm(&x, &layer.attn_norm, c.eps);
-            let mut q = layer.q.forward(&xn);
-            let mut k = layer.k.forward(&xn);
-            let v = layer.v.forward(&xn);
+            cpu::rms_norm(&s.x, &layer.attn_norm, c.eps, &mut s.xn);
+            layer.q.forward_into(&s.xn, &mut s.q);
+            layer.k.forward_into(&s.xn, &mut s.k);
+            layer.v.forward_into(&s.xn, &mut s.v);
 
-            cpu::rope(&mut q, c.heads, c.head_dim, &cos, &sin);
-            cpu::rope(&mut k, c.kv_heads, c.head_dim, &cos, &sin);
-            kv.push(i, &k, &v);
+            cpu::rope(&mut s.q, c.heads, c.head_dim, &cos, &sin);
+            cpu::rope(&mut s.k, c.kv_heads, c.head_dim, &cos, &sin);
+            kv.push(i, &s.k, &s.v);
 
-            let attn = self.attend(&q, kv, i);
-            cpu::add_into(&mut x, &layer.o.forward(&attn));
+            self.attend(&s.q, kv, i, &mut s.attn);
+            layer.o.forward_into(&s.attn, &mut s.temp);
+            cpu::add_into(&mut s.x, &s.temp);
 
-            let xn = cpu::rms_norm(&x, &layer.ffn_norm, c.eps);
-            let mut gate = layer.gate.forward(&xn);
-            cpu::swiglu(&mut gate, &layer.up.forward(&xn));
-            cpu::add_into(&mut x, &layer.down.forward(&gate));
+            cpu::rms_norm(&s.x, &layer.ffn_norm, c.eps, &mut s.xn);
+            layer.gate.forward_into(&s.xn, &mut s.gate);
+            layer.up.forward_into(&s.xn, &mut s.up);
+            cpu::swiglu(&mut s.gate, &s.up);
+            layer.down.forward_into(&s.gate, &mut s.temp);
+            cpu::add_into(&mut s.x, &s.temp);
         }
 
         kv.increment_seq();
-
-        let xn = cpu::rms_norm(&x, &self.out_norm, c.eps);
-        self.head.forward(&xn)
+        cpu::rms_norm(&s.x, &self.out_norm, c.eps, &mut s.xn);
+        self.head.forward_into(&s.xn, &mut s.logits);
     }
 
-    /// Grouped-query attention over the cache, one rayon task per head.
-    fn attend(&self, q: &[f32], kv: &KvCache, layer: usize) -> Vec<f32> {
+    fn attend(&self, q: &[f32], kv: &KvCache, layer: usize, out: &mut [f32]) {
         let c = &self.cfg;
         let (hd, kv_dim, groups) = (c.head_dim, c.kv_dim(), c.groups());
         let seq = kv.seq_len(layer);
         let scale = 1.0 / (hd as f32).sqrt();
         let (keys, vals) = (kv.k(layer), kv.v(layer));
 
-        let mut out = vec![0f32; c.heads * hd];
         out.par_chunks_mut(hd).enumerate().for_each(|(h, o)| {
             let base = (h / groups) * hd;
             let qh = &q[h * hd..(h + 1) * hd];
 
-            let mut scores: Vec<f32> = (0..seq)
-                .map(|t| {
-                    let ks = t * kv_dim + base;
-                    keys[ks..ks + hd].iter().zip(qh).map(|(&a, &b)| a * b).sum::<f32>() * scale
-                })
-                .collect();
+            let mut scores: Vec<f32> = (0..seq).map(|t| {
+                let ks = t * kv_dim + base;
+                keys[ks..ks + hd].iter().zip(qh).map(|(&a, &b)| a * b).sum::<f32>() * scale
+            }).collect();
             cpu::softmax(&mut scores);
 
+            o.fill(0.0);
             for (t, &s) in scores.iter().enumerate() {
                 let vs = t * kv_dim + base;
                 for (acc, &val) in o.iter_mut().zip(&vals[vs..vs + hd]) {
@@ -289,10 +271,9 @@ impl Engine {
                 }
             }
         });
-        out
     }
 
-    // ─── Generation ───────────────────────────────────────────────────────
+    // ─── Generation API ───────────────────────────────────────────────────
 
     pub fn prompt(&self, user: &str, system: &str) -> String {
         template(&self.arch, user, system)
@@ -306,18 +287,17 @@ impl Engine {
 
     pub fn generate<F: FnMut(&str)>(&self, question: &str, p: &Params, mut on_text: F) -> Result<Stats> {
         let err = |e: Box<dyn std::error::Error + Send + Sync>| anyhow!("{e}");
-        let ids = self
-            .tok
-            .encode(&self.prompt(question, &p.system), false)
-            .map_err(err)?;
+        let ids = self.tok.encode(&self.prompt(question, &p.system), false).map_err(err)?;
 
         let mut kv = KvCache::new(self.layers.len(), self.cfg.kv_dim(), self.cfg.max_seq);
         let mut stats = Stats { prompt_tokens: ids.len(), ..Default::default() };
 
+        let mlp_dim = self.layers.first().map(|l| l.gate.rows()).unwrap_or(self.cfg.hidden * 4);
+        let mut scratch = Scratch::new(&self.cfg, self.cfg.heads * self.cfg.head_dim, mlp_dim, self.head.rows());
+
         let t0 = Instant::now();
-        let mut logits = Vec::new();
         for (pos, &token) in ids.iter().enumerate() {
-            logits = self.forward(token, pos, &mut kv);
+            self.forward(token, pos, &mut kv, &mut scratch);
         }
         stats.prefill_secs = t0.elapsed().as_secs_f32();
 
@@ -326,63 +306,24 @@ impl Engine {
         let mut shown = 0usize;
         for step in 0..p.max_tokens {
             let window = out.len().saturating_sub(64);
-            cpu::repeat_penalty(&mut logits, &out[window..], p.repeat_penalty);
+            sampling::repeat_penalty(&mut scratch.logits, &out[window..], p.repeat_penalty);
 
-            let next = cpu::sample(&logits, p.temperature, p.top_p);
+            let next = sampling::sample(&scratch.logits, p.temperature, p.top_p);
             if self.eos.contains(&next) || ids.len() + step + 1 >= self.cfg.max_seq {
                 break;
             }
             out.push(next);
 
-            // Decode the whole tail so multi-token characters render correctly.
             let text = self.tok.decode(&out, true).map_err(err)?;
             if let Some(chunk) = text.get(shown..).filter(|c| !c.is_empty()) {
                 on_text(chunk);
                 shown = text.len();
             }
 
-            logits = self.forward(next, ids.len() + step, &mut kv);
+            self.forward(next, ids.len() + step, &mut kv, &mut scratch);
         }
         stats.generated = out.len();
         stats.decode_secs = t1.elapsed().as_secs_f32();
         Ok(stats)
     }
-}
-
-// ─── Chat templates ───────────────────────────────────────────────────────
-
-fn template(arch: &Architecture, user: &str, system: &str) -> String {
-    match arch {
-        Architecture::Gemma | Architecture::Gemma2 | Architecture::Gemma3 | Architecture::Gemma4 => {
-            format!("<start_of_turn>user\n{system}\n\n{user}<end_of_turn>\n<start_of_turn>model\n")
-        }
-        Architecture::Llama => format!(
-            "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system}<|eot_id|>\
-             <|start_header_id|>user<|end_header_id|>\n\n{user}<|eot_id|>\
-             <|start_header_id|>assistant<|end_header_id|>\n\n"
-        ),
-        _ => format!(
-            "<|im_start|>system\n{system}<|im_end|>\n\
-             <|im_start|>user\n{user}<|im_end|>\n\
-             <|im_start|>assistant\n"
-        ),
-    }
-}
-
-fn eos_ids(cfg: &ModelConfig, tok: &Tokenizer) -> Vec<u32> {
-    let mut ids = Vec::new();
-    if let Some(eos) = &cfg.eos_token_id {
-        match eos {
-            rustylm_core::config::TokenId::Single(id) => ids.push(*id),
-            rustylm_core::config::TokenId::Multiple(v) => ids.extend(v),
-        }
-    }
-    for name in ["<|im_end|>", "<|endoftext|>", "<|eot_id|>", "<end_of_turn>", "<eos>"] {
-        if let Some(id) = tok.token_to_id(name) {
-            ids.push(id);
-        }
-    }
-    ids.sort_unstable();
-    ids.dedup();
-    ids
 }
